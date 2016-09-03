@@ -1,6 +1,9 @@
 package famaf.unc.edu.ar.activitiesassignment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -36,7 +39,14 @@ public class NewsActivity extends AppCompatActivity {
             NewsActivityFragment newsfragment = (NewsActivityFragment)
                     getSupportFragmentManager().findFragmentById(R.id.news_activity_fragment_id);
             TextView textView = (TextView) findViewById(R.id.loginStatusTextView);
-            textView.setText("User XXXX logged in");
+
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            //startActivityForResult(intent);
+
+
+
+            textView.setText("pepito");
             return true;
         }
 
