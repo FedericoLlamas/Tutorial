@@ -1,9 +1,8 @@
 package famaf.unc.edu.ar.activitiesassignment;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -38,18 +37,30 @@ public class NewsActivity extends AppCompatActivity {
         if (id == R.id.action_sign_in) {
             NewsActivityFragment newsfragment = (NewsActivityFragment)
                     getSupportFragmentManager().findFragmentById(R.id.news_activity_fragment_id);
-            TextView textView = (TextView) findViewById(R.id.loginStatusTextView);
 
             Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            //startActivityForResult(intent);
+            startActivityForResult(intent, 1);
 
-
-
-            textView.setText("pepito");
+            //TextView textView = (TextView) findViewById(R.id.loginStatusTextView);
+            //textView.setText("User XXXX logged in");
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                String result=data.getStringExtra("Email");
+                String username = "User  " + result + " logged in";
+                TextView textView = (TextView) findViewById(R.id.loginStatusTextView);
+                textView.setText(username);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }//onActivityResult
 }
