@@ -1,4 +1,4 @@
-package famaf.unc.edu.ar.activitiesassignment;
+package famaf.unc.edu.ar.redditreader;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

@@ -1,4 +1,4 @@
-package famaf.unc.edu.ar.activitiesassignment;
+package famaf.unc.edu.ar.redditreader;
 
 import org.junit.Test;
 
