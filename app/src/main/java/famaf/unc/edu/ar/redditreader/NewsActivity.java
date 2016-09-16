@@ -29,13 +29,13 @@ public class NewsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_sign_in) {
+        /*if (id == R.id.action_sign_in) {
             NewsActivityFragment newsfragment = (NewsActivityFragment)
                     getSupportFragmentManager().findFragmentById(R.id.news_activity_fragment_id);
             TextView textView = (TextView) findViewById(R.id.loginStatusTextView);
             textView.setText("User XXXX logged in");
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
