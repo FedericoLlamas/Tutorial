@@ -20,15 +20,17 @@
         android:layout_toLeftOf="@+id/textView2"
         android:layout_alignBottom="@+id/textView3"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        tools:ignore="ContentDescription,RtlHardcoded"
+        android:contentDescription="" />
 
     <TextView
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec"
+        android:text="@string/lorem_ipsum_dolor_sit_amet_consectetur_adipiscing_elit_donec"
         android:id="@+id/textView2"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:layout_below="@+id/textView"
         android:layout_toLeftOf="@+id/imageView3"
         android:layout_toStartOf="@+id/imageView3"
@@ -42,13 +44,15 @@
         android:background="@android:drawable/sym_action_chat"
         android:layout_below="@+id/textView2"
         android:layout_toRightOf="@+id/imageView"
-        android:layout_toEndOf="@+id/imageView" />
+        android:layout_toEndOf="@+id/imageView"
+        android:contentDescription=""
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="2112 comentarios"
+        android:text="@string/_2112_comentarios"
         android:id="@+id/textView3"
         android:layout_alignBottom="@+id/imageView2"
         android:layout_toRightOf="@+id/imageView2"
@@ -58,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="r/todayilerned      Hace 4h"
+        android:text="@string/r_todayilerned_hace_4h"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/textView2"
@@ -72,5 +76,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/imageView2" />
+        android:layout_alignBottom="@+id/imageView2"
+        tools:ignore="ContentDescription" />
 </RelativeLayout>

@@ -16,6 +16,9 @@
     </string>
 
     <string name="title_activity_news">Reddit Reader</string>
+    <string name="_2112_comentarios">2112 comentarios</string>
+    <string name="lorem_ipsum_dolor_sit_amet_consectetur_adipiscing_elit_donec">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec</string>
+    <string name="r_todayilerned_hace_4h">r/todayilerned Hace 4h</string>
 
 
 </resources>
