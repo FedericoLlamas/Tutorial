@@ -1,10 +1,12 @@
-package famaf.unc.edu.ar.redditreader;
+package ar.edu.unc.famaf.redditreader;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import famaf.unc.edu.ar.redditreader.R;
 
 /**
  * A placeholder fragment containing a simple view.
