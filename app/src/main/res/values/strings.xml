@@ -17,6 +17,13 @@
 
     <string name="title_activity_news">"Activity News"
     </string>
+    <string name="subreddit">subreddit</string>
+    <string name="time">fecha</string>
+    <string name="lorem_ipsum">lorem</string>
+    <string name="comments">comments</string>
+    <string name="titlePost">titlePost</string>
+    <string name="date">date</string>
+    <string name="no_user_logged_yet">No user logged yet</string>
 
 
 </resources>
