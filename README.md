@@ -1,4 +1,4 @@
-# AdaptersAssignment | Android Reddit Reader - Step 3
+ # AdaptersAssignment | Android Reddit Reader - Step 3
 
 ## Contexto
 
