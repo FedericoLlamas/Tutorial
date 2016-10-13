@@ -75,12 +75,6 @@ public class PostAdapter extends ArrayAdapter<PostModel> {
 
         PostModel post_model = model_list.get(position);
 
-        TextView postTitle = (TextView) convertView.findViewById(R.id.title_id);
-        TextView postAuthor= (TextView) convertView.findViewById(R.id.author_id);
-        TextView postDate = (TextView) convertView.findViewById(R.id.date_id);
-        TextView postComments = (TextView) convertView.findViewById(R.id.com_num_id);
-        ImageView postImage = (ImageView) convertView.findViewById(R.id.image_id);
-
         holder.title.setText(post_model.getTitle());
         holder.author.setText(post_model.getAuthor());
         holder.date.setText(post_model.getDate());
