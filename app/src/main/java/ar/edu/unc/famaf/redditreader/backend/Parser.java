@@ -41,7 +41,8 @@ public class Parser {
                 String author = topic.getString("author");
                 String postTime = dateString;
                 String comment = topic.getString("num_comments");
-                String imageUrl = "http://cdn.revistagq.com/uploads/images/thumbs/201525/reddit_5253_645x485.png";
+                //String imageUrl = "http://cdn.revistagq.com/uploads/images/thumbs/201525/reddit_5253_645x485.png";
+                String imageUrl = "";
                 list.add(new PostModel(title, author, postTime, comment, R.drawable.icono, imageUrl));
             }
             return list;

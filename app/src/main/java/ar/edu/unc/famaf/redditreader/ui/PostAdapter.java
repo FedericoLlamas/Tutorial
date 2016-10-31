@@ -139,7 +139,10 @@ public class PostAdapter extends ArrayAdapter<PostModel> {
 
         private Bitmap downloadBitmap(String url) {
             HttpURLConnection urlConnection = null;
-                try {
+            try {
+                if (url == ""){
+                    url = "http://cdn.revistagq.com/uploads/images/thumbs/201525/reddit_5253_645x485.png";
+                }
                 URL uri = new URL(url);
                 urlConnection = (HttpURLConnection) uri.openConnection();
                 int statusCode = urlConnection.getResponseCode();

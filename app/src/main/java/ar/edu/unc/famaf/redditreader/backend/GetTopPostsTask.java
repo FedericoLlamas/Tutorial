@@ -1,6 +1,9 @@
 package ar.edu.unc.famaf.redditreader.backend;
 
+import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -14,8 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.model.PostModel;
-import ar.edu.unc.famaf.redditreader.ui.NewsActivity;
 import ar.edu.unc.famaf.redditreader.ui.NewsActivityFragment;
+
 
 /**
  * Created by federico on 29/10/16.
@@ -65,6 +68,7 @@ public class GetTopPostsTask extends AsyncTask {
 
         return listTop50;
     }
+
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
         frgActivity.notifyNewsRetrieved();
