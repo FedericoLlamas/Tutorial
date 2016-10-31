@@ -29,11 +29,8 @@ public class NewsActivityFragment extends Fragment {
 
         View lv_view =  inflater.inflate(R.layout.fragment_news, container, false);
 
-        List<PostModel> postLst = Backend.getInstance().getTopPosts();
+        //List<PostModel> postLst = Backend.getInstance().getTopPosts();
         List<PostModel> postLst1 = new ArrayList<PostModel>();
-
-
-        //List<PostModel> lista = (List<PostModel>) new GetTopPostsTask().execute();
 
         adapter = new PostAdapter(getContext(), R.layout.row_layout, postLst1);
         new GetTopPostsTask(postLst1, this).execute();

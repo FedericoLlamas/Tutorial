@@ -33,10 +33,8 @@ public class GetTopPostsTask extends AsyncTask {
 
     @Override
     protected List<PostModel> doInBackground(Object... params) {
-        //ArrayList<PostModel> listTop50 = new ArrayList<PostModel>();
         List<PostModel> listTop50 = null;
         HttpURLConnection conn = null;
-        //conn.getInputStream();
         BufferedReader reader = null;
         // Will contain the raw JSON response as a string.
         //String forecastJsonStr = null;
