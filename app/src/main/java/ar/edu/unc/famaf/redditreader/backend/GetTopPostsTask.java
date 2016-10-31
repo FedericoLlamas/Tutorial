@@ -1,5 +1,6 @@
 package ar.edu.unc.famaf.redditreader.backend;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -27,12 +28,19 @@ import ar.edu.unc.famaf.redditreader.ui.NewsActivityFragment;
 public class GetTopPostsTask extends AsyncTask {
 
     List<PostModel> postList;
+    //ProgressDialog dialog = null;
     NewsActivityFragment frgActivity;
 
     public GetTopPostsTask(List<PostModel> postList, NewsActivityFragment listener) {
         this.postList = postList;
         this.frgActivity = listener;
     }
+    /*@Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        dialog.setMessage("Loading...");
+        dialog.show();
+    }*/
 
     @Override
     protected List<PostModel> doInBackground(Object... params) {
@@ -69,8 +77,12 @@ public class GetTopPostsTask extends AsyncTask {
         return listTop50;
     }
 
+    @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
+        /*if (dialog.isShowing()) {
+            dialog.dismiss();
+        }*/
         frgActivity.notifyNewsRetrieved();
     }
 }
