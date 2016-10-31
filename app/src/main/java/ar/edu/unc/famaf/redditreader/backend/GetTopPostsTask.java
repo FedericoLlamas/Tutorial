@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.model.PostModel;
+import ar.edu.unc.famaf.redditreader.ui.NewsActivity;
 import ar.edu.unc.famaf.redditreader.ui.NewsActivityFragment;
 
 
@@ -28,19 +29,22 @@ import ar.edu.unc.famaf.redditreader.ui.NewsActivityFragment;
 public class GetTopPostsTask extends AsyncTask {
 
     List<PostModel> postList;
-    //ProgressDialog dialog = null;
     NewsActivityFragment frgActivity;
+
+    //ProgressDialog dialog = null;
+    private ProgressDialog dialog;
 
     public GetTopPostsTask(List<PostModel> postList, NewsActivityFragment listener) {
         this.postList = postList;
         this.frgActivity = listener;
     }
-    /*@Override
+    @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        dialog = new ProgressDialog(this.frgActivity.getContext());
         dialog.setMessage("Loading...");
         dialog.show();
-    }*/
+    }
 
     @Override
     protected List<PostModel> doInBackground(Object... params) {
@@ -80,9 +84,9 @@ public class GetTopPostsTask extends AsyncTask {
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        /*if (dialog.isShowing()) {
+        if (dialog.isShowing()) {
             dialog.dismiss();
-        }*/
+        }
         frgActivity.notifyNewsRetrieved();
     }
 }
