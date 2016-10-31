@@ -36,10 +36,9 @@ public class GetTopPostsTask extends AsyncTask {
         List<PostModel> listTop50 = null;
         HttpURLConnection conn = null;
         BufferedReader reader = null;
-        // Will contain the raw JSON response as a string.
-        //String forecastJsonStr = null;
         try {
-            conn = (HttpURLConnection) new URL("https://www.reddit.com/r/AskReddit/.json?limit=2").openConnection();
+
+            conn = (HttpURLConnection) new URL("https://www.reddit.com/r/AskReddit/.json?limit=50").openConnection();
             conn.setRequestMethod("GET");
             conn.connect();
             int resCode = conn.getResponseCode();
@@ -55,8 +54,6 @@ public class GetTopPostsTask extends AsyncTask {
             }
         } catch (IOException e) {
             Log.e("PlaceholderFragment", "Error ", e);
-            // If the code didn't successfully get the weather data, there's no point in attemping
-            // to parse it.
             return null;
         } catch (JSONException e) {
             e.printStackTrace();

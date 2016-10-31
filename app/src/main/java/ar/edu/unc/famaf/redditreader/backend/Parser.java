@@ -35,38 +35,23 @@ public class Parser {
             for (int i = 0; i < hotTopics.length(); i++) {
                 JSONObject topic = hotTopics.getJSONObject(i).getJSONObject("data");
 
+                String dateString = new SimpleDateFormat("dd/MM/yyyy").format(new Date(topic.getLong("created_utc")));
+
                 String title = topic.getString("title");
                 String author = topic.getString("author");
-
-                long timestamp = Long.parseLong(topic.getString("created_utc")) * 1000;
-                String postTime = getDate(timestamp).toString();
-                String comment = topic.getString("num_comments");;
-                //String imageUrl = topic.getString("thumbnail");
-                String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/f/f2/Puma_marca.jpg";
+                String postTime = dateString;
+                String comment = topic.getString("num_comments");
+                String imageUrl = "http://cdn.revistagq.com/uploads/images/thumbs/201525/reddit_5253_645x485.png";
                 list.add(new PostModel(title, author, postTime, comment, R.drawable.icono, imageUrl));
             }
             return list;
 
         } catch (IOException e) {
             Log.e("PlaceholderFragment", "Error ", e);
-            // If the code didn't successfully get the weather data, there's no point in attemping
-            // to parse it.
             return null;
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return list;
-    }
-
-    private String getDate(long timeStamp){
-
-        try{
-            DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-            Date netDate = (new Date(timeStamp));
-            return sdf.format(netDate);
-        }
-        catch(Exception ex){
-            return "xx";
-        }
     }
 }

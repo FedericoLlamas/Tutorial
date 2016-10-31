@@ -29,7 +29,6 @@ public class NewsActivityFragment extends Fragment {
 
         View lv_view =  inflater.inflate(R.layout.fragment_news, container, false);
 
-        //List<PostModel> postLst = Backend.getInstance().getTopPosts();
         List<PostModel> postLst1 = new ArrayList<PostModel>();
 
         adapter = new PostAdapter(getContext(), R.layout.row_layout, postLst1);
