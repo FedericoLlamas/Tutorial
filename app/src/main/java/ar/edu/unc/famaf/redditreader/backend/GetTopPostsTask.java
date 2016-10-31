@@ -30,8 +30,6 @@ public class GetTopPostsTask extends AsyncTask {
 
     List<PostModel> postList;
     NewsActivityFragment frgActivity;
-
-    //ProgressDialog dialog = null;
     private ProgressDialog dialog;
 
     public GetTopPostsTask(List<PostModel> postList, NewsActivityFragment listener) {
