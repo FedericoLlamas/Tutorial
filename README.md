@@ -19,7 +19,7 @@ El presente curso ha sido diseñado por [Diego Mercado](https://github.com/merca
  2. Persistir los resultados en una base de datos interna 
  3. Devolver los resultados desde la base de datos interna
  4. En caso de que no haya conexión a internet, se deben devolver los últimos resultados obtenidos desde la base de datos interna 
-2. La base de datos interna debe estar implementada en una nueva clase: `ar.edu.unc.famaf.redditreader.backend.RedditDBHelper` de tipo `SQLiteOpenHelper`
+2. La base de datos interna debe estar implementada en una nueva clase: `ar.edu.unc.famaf.redditreader.backend.ReeditDBHelper` de tipo `SQLiteOpenHelper`
  * Solo almacena los últimos 50 posts. El resto deben borrarse.
 3. Los _thumbnails/preview_ a medida que se descargan deben también almacenarse. Recordar que pueden almacenarse como un arreglo de bytes:
 

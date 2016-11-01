@@ -1,17 +1,15 @@
 package ar.edu.unc.famaf.redditreader.model;
 
-import java.util.Date;
-
 public class PostModel {
 
     private String title;
     private String author;
     private String date;
     private String comments;
-    private int image;
+    private String image;
     private String url;
 
-    public PostModel(String title, String author, String date, String comments, int image, String url) {
+    public PostModel(String title, String author, String date, String comments, String image, String url) {
         this.title = title;
         this.author = author;
         this.date = date;
@@ -52,11 +50,11 @@ public class PostModel {
         this.comments = comments;
     }
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

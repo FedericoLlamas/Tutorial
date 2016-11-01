@@ -98,7 +98,7 @@ public class PostAdapter extends ArrayAdapter<PostModel> {
         holder.comments.setText(post_model.getComments());
 
         if (holder.image != null) {
-            new DownLoadImageAsyncTask(holder.image).execute(post_model.getUrl());
+            new DownLoadImageAsyncTask(holder.image).execute(post_model.getImage());
         }
         //String bitmap = "https://www.google.com.ar/intl/en_ALL/images/logos/images_logo_lg.gif";
 
