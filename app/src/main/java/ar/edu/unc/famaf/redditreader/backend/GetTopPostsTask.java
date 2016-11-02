@@ -51,7 +51,7 @@ public class GetTopPostsTask extends AsyncTask {
         BufferedReader reader = null;
         try {
 
-            conn = (HttpURLConnection) new URL("https://www.reddit.com/r/AskReddit/.json?limit=50").openConnection();
+            conn = (HttpURLConnection) new URL("https://www.reddit.com/r/redditdev/top/.json?sort=top&t=all&limit=50").openConnection();
             conn.setRequestMethod("GET");
             conn.connect();
             int resCode = conn.getResponseCode();
