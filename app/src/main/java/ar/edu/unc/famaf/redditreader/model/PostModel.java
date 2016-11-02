@@ -8,15 +8,13 @@ public class PostModel {
     private String author;
     private String date;
     private String comments;
-    private int image;
     private String url;
 
-    public PostModel(String title, String author, String date, String comments, int image, String url) {
+    public PostModel(String title, String author, String date, String comments, String url) {
         this.title = title;
         this.author = author;
         this.date = date;
         this.comments = comments;
-        this.image = image;
         this.url = url;
     }
 
@@ -50,14 +48,6 @@ public class PostModel {
 
     public void setComments(String comments) {
         this.comments = comments;
-    }
-
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
     }
 
     public String getUrl() {

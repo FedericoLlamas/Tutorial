@@ -10,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +17,8 @@ import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.R;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
+
+import static ar.edu.unc.famaf.redditreader.R.string.date;
 
 /**
  * Created by federico on 29/10/16.
@@ -35,15 +36,13 @@ public class Parser {
             for (int i = 0; i < hotTopics.length(); i++) {
                 JSONObject topic = hotTopics.getJSONObject(i).getJSONObject("data");
 
-                String dateString = new SimpleDateFormat("dd/MM/yyyy").format(new Date(topic.getLong("created_utc")));
-
+                String time = new SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(Double.valueOf(topic.getLong("created")).longValue()*1000));
                 String title = topic.getString("title");
                 String author = topic.getString("author");
-                String postTime = dateString;
+                String postTime = time.toString();
                 String comment = topic.getString("num_comments");
-                //String imageUrl = "http://cdn.revistagq.com/uploads/images/thumbs/201525/reddit_5253_645x485.png";
                 String imageUrl = topic.getString("thumbnail");
-                list.add(new PostModel(title, author, postTime, comment, R.drawable.icono, imageUrl));
+                list.add(new PostModel(title, author, postTime, comment, imageUrl));
             }
             return list;
 

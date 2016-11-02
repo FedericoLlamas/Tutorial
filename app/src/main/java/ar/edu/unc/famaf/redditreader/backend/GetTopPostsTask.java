@@ -1,15 +1,11 @@
 package ar.edu.unc.famaf.redditreader.backend;
 
-import android.app.Activity;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import org.json.JSONException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -18,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.model.PostModel;
-import ar.edu.unc.famaf.redditreader.ui.NewsActivity;
 import ar.edu.unc.famaf.redditreader.ui.NewsActivityFragment;
 
 
@@ -28,8 +23,8 @@ import ar.edu.unc.famaf.redditreader.ui.NewsActivityFragment;
 
 public class GetTopPostsTask extends AsyncTask {
 
-    List<PostModel> postList;
-    NewsActivityFragment frgActivity;
+    private List<PostModel> postList;
+    private NewsActivityFragment frgActivity;
     private ProgressDialog dialog;
 
     public GetTopPostsTask(List<PostModel> postList, NewsActivityFragment listener) {
@@ -48,10 +43,9 @@ public class GetTopPostsTask extends AsyncTask {
     protected List<PostModel> doInBackground(Object... params) {
         List<PostModel> listTop50 = null;
         HttpURLConnection conn = null;
-        BufferedReader reader = null;
         try {
 
-            conn = (HttpURLConnection) new URL("https://www.reddit.com/r/redditdev/top/.json?sort=top&t=all&limit=50").openConnection();
+            conn = (HttpURLConnection) new URL("https://www.reddit.com/r/todayilearned/top.json?limit=50").openConnection();
             conn.setRequestMethod("GET");
             conn.connect();
             int resCode = conn.getResponseCode();
