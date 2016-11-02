@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -98,10 +99,8 @@ public class PostAdapter extends ArrayAdapter<PostModel> {
         holder.comments.setText(post_model.getComments());
 
         if (holder.image != null) {
-            new DownLoadImageAsyncTask(holder.image).execute(post_model.getImage());
+            new DownLoadImageAsyncTask(holder.image).execute(post_model.getUrl());
         }
-        //String bitmap = "https://www.google.com.ar/intl/en_ALL/images/logos/images_logo_lg.gif";
-
         return convertView;
     }
 
@@ -140,7 +139,8 @@ public class PostAdapter extends ArrayAdapter<PostModel> {
         private Bitmap downloadBitmap(String url) {
             HttpURLConnection urlConnection = null;
             try {
-                if (url.isEmpty()){
+                if (!URLUtil.isValidUrl(url)){
+                    // Default thumbnail
                     url = "http://cdn.revistagq.com/uploads/images/thumbs/201525/reddit_5253_645x485.png";
                 }
                 URL uri = new URL(url);
@@ -168,8 +168,6 @@ public class PostAdapter extends ArrayAdapter<PostModel> {
             return null;
         }
     }
-
-
 
     @Override
     public boolean isEmpty() {
