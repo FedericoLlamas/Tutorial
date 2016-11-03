@@ -12,7 +12,7 @@ public class ReeditDBHelper extends SQLiteOpenHelper{
 
     //Sentencia SQL para crear la tabla de Usuarios
     private String sqlCreate = "CREATE TABLE Models_table (title VARCHAR, author VARCHAR, " +
-            "date VARCHAR, comments VARCHAR, image INTEGER, url VARCHAR)";
+            "date VARCHAR, comments VARCHAR, url VARCHAR)";
 
     public ReeditDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -32,7 +32,7 @@ public class ReeditDBHelper extends SQLiteOpenHelper{
         //      a la nueva, por lo que este método debería ser más elaborado.
 
         //Se elimina la versión anterior de la tabla
-        db.execSQL("DROP TABLE IF EXISTS Usuarios");
+        db.execSQL("DROP TABLE IF EXISTS Models_table");
 
         //Se crea la nueva versión de la tabla
         db.execSQL(sqlCreate);

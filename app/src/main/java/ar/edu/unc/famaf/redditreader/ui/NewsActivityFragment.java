@@ -44,10 +44,10 @@ public class NewsActivityFragment extends Fragment {
 
         if (isOnline()){
 
-            new GetTopPostsTask(postLst1, this).execute();
+            //new GetTopPostsTask(postLst1, this).execute();
 
             //Abrimos la base de datos 'Models_table' en modo escritura
-            /*ReeditDBHelper reedDbHelper =
+            ReeditDBHelper reedDbHelper =
                     new ReeditDBHelper(getContext(), "Models_table", null, 1);
 
             SQLiteDatabase db = reedDbHelper.getWritableDatabase();
@@ -67,19 +67,17 @@ public class NewsActivityFragment extends Fragment {
                     //int image = postLst1.get(i).getImage();
                     String image = "imagen";
                     //String url = postLst1.get(i).getUrl();
-                    String url = Uri.parse(postLst1.get(i).getUrl())
-                            .buildUpon()
-                            .appendQueryParameter("key", "val")
-                            .build().toString();
 
                     //Insertamos los datos en la tabla Usuarios
-                    db.execSQL("INSERT INTO Models_table (title, author, date, comments, image, url) " +
-                            "VALUES ("+ title +", "+ author +", "+ date +", "+ comments +", "+ image +", "+ url +")");
+                    /*db.execSQL("INSERT INTO Models_table (title, author, date, comments, image) " +
+                            "VALUES ("+ title +", "+ author +", "+ date +", "+ comments +", "+ image +")");*/
+                    db.execSQL("INSERT INTO Models_table (title, author, date, comments, image) " +
+                            "VALUES ('title', 'author', 'date','comments','image')");
                 }
 
                 //Cerramos la base de datos
                 db.close();
-            }*/
+            }
         }
         else{
             buildDialog(getActivity()).show();
