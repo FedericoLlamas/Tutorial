@@ -3,6 +3,7 @@ package ar.edu.unc.famaf.redditreader.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,6 +27,8 @@ import ar.edu.unc.famaf.redditreader.backend.GetTopPostsTask;
 import ar.edu.unc.famaf.redditreader.backend.ReeditDBHelper;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
+import static android.R.id.list;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -38,50 +41,69 @@ public class NewsActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View lv_view =  inflater.inflate(R.layout.fragment_news, container, false);
-
         List<PostModel> postLst1 = new ArrayList<PostModel>();
-        adapter = new PostAdapter(getContext(), R.layout.row_layout, postLst1);
+
+        ReeditDBHelper reedDbHelper =
+                new ReeditDBHelper(getContext(), "POST_DATABASE", null, 1);
+
+        List<PostModel> list_post = new ArrayList<PostModel>();
 
         if (isOnline()){
-
-            //new GetTopPostsTask(postLst1, this).execute();
-
-            //Abrimos la base de datos 'Models_table' en modo escritura
-            ReeditDBHelper reedDbHelper =
-                    new ReeditDBHelper(getContext(), "Models_table", null, 1);
-
             SQLiteDatabase db = reedDbHelper.getWritableDatabase();
-            //Si hemos abierto correctamente la base de datos
+
             if(db != null)
             {
-                //Insertamos 5 usuarios de ejemplo
+                reedDbHelper.onUpgrade(db, 1, 2);
+
                 //new GetTopPostsTask(postLst1, this).execute();
+                //TODO borrar, usar un listener.
                 postLst1 = Backend.getInstance().getTopPosts();
-                for(int i=0; i <= postLst1.size(); i++)
+                for(int i=0; i <= postLst1.size()-1; i++)
                 {
-                    //Generamos los datos
                     String title = postLst1.get(i).getTitle();
                     String author = postLst1.get(i).getAuthor();
                     String date = postLst1.get(i).getDate();
                     String comments = postLst1.get(i).getComments();
-                    //int image = postLst1.get(i).getImage();
-                    String image = "imagen";
+                    String url = "url";
                     //String url = postLst1.get(i).getUrl();
 
-                    //Insertamos los datos en la tabla Usuarios
-                    /*db.execSQL("INSERT INTO Models_table (title, author, date, comments, image) " +
-                            "VALUES ("+ title +", "+ author +", "+ date +", "+ comments +", "+ image +")");*/
-                    db.execSQL("INSERT INTO Models_table (title, author, date, comments, image) " +
-                            "VALUES ('title', 'author', 'date','comments','image')");
+                    db.execSQL("INSERT INTO post_table (title, author, date, comments, url) " +
+                            "VALUES ('"+title+"', '"+author+"', '"+date+"','"+comments+"','"+url+"')");
                 }
-
-                //Cerramos la base de datos
-                db.close();
             }
+            Cursor cursor = db.rawQuery("select * from post_table", null);
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    String title = cursor.getString(cursor.getColumnIndex("title"));
+                    String author = cursor.getString(cursor.getColumnIndex("author"));
+                    String date = cursor.getString(cursor.getColumnIndex("date"));
+                    String comments = cursor.getString(cursor.getColumnIndex("comments"));
+                    String url = cursor.getString(cursor.getColumnIndex("url"));
+                    list_post.add(new PostModel(title, author, date, comments, url));
+                    cursor.moveToNext();
+                }
+            }
+            db.close();
         }
         else{
             buildDialog(getActivity()).show();
+            SQLiteDatabase db = reedDbHelper.getReadableDatabase();
+            Cursor cursor = db.rawQuery("select * from post_table", null);
+
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    String title = cursor.getString(cursor.getColumnIndex("title"));
+                    String author = cursor.getString(cursor.getColumnIndex("author"));
+                    String date = cursor.getString(cursor.getColumnIndex("date"));
+                    String comments = cursor.getString(cursor.getColumnIndex("comments"));
+                    String url = cursor.getString(cursor.getColumnIndex("url"));
+                    list_post.add(new PostModel(title, author, date, comments, url));
+                    cursor.moveToNext();
+                }
+            }
+            db.close();
         }
+        adapter = new PostAdapter(getContext(), R.layout.row_layout, list_post);
         ListView list_view = (ListView) lv_view.findViewById(R.id.list_view_id);
         list_view.setAdapter(adapter);
 
@@ -123,6 +145,7 @@ public class NewsActivityFragment extends Fragment {
         bitmap.compress(Bitmap.CompressFormat.JPEG,0, stream);
         return stream.toByteArray();
     }
+
     public static Bitmap getImage(byte[] image)
     {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
