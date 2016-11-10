@@ -27,10 +27,16 @@ public class GetTopPostsTask extends AsyncTask {
     private NewsActivityFragment frgActivity;
     private ProgressDialog dialog;
 
+
+    /*public GetTopPostsTask(TopPostIterator top_post_iterator){
+        this.top_post_iterator=top_post_iterator;
+    }*/
+
     public GetTopPostsTask(List<PostModel> postList, NewsActivityFragment listener) {
         this.postList = postList;
         this.frgActivity = listener;
     }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();

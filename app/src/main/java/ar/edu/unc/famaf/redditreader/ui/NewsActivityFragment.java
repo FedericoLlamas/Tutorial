@@ -5,11 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,22 +14,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.R;
-import ar.edu.unc.famaf.redditreader.backend.Backend;
 import ar.edu.unc.famaf.redditreader.backend.GetTopPostsTask;
 import ar.edu.unc.famaf.redditreader.backend.ReeditDBHelper;
+import ar.edu.unc.famaf.redditreader.backend.TopPostIterator;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
-
-import static android.R.id.list;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NewsActivityFragment extends Fragment {
+public class NewsActivityFragment extends Fragment implements TopPostIterator {
     PostAdapter adapter;
     public NewsActivityFragment() {
     }
@@ -41,24 +35,32 @@ public class NewsActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View lv_view =  inflater.inflate(R.layout.fragment_news, container, false);
-        List<PostModel> postLst1 = new ArrayList<PostModel>();
+        //final List<PostModel> postLst1 = new ArrayList<PostModel>();
 
         ReeditDBHelper reedDbHelper =
                 new ReeditDBHelper(getContext(), "POST_DATABASE", null, 1);
 
-        List<PostModel> list_post = new ArrayList<PostModel>();
+        final List<PostModel> list_post = new ArrayList<PostModel>();
 
         if (isOnline()){
-            SQLiteDatabase db = reedDbHelper.getWritableDatabase();
+            final SQLiteDatabase db = reedDbHelper.getWritableDatabase();
 
             if(db != null)
             {
                 reedDbHelper.onUpgrade(db, 1, 2);
 
                 //new GetTopPostsTask(postLst1, this).execute();
+
+                new GetTopPostsTask(list_post, this){
+                    protected void onPostExecute(PostModel response){
+                        nextPosts(list_post, db);
+                    }
+                }.execute();
+
                 //TODO borrar, usar un listener.
-                postLst1 = Backend.getInstance().getTopPosts();
-                for(int i=0; i <= postLst1.size()-1; i++)
+
+               // postLst1 = Backend.getInstance().getTopPosts();
+                /*for(int i=0; i <= postLst1.size()-1; i++)
                 {
                     String title = postLst1.get(i).getTitle();
                     String author = postLst1.get(i).getAuthor();
@@ -69,7 +71,7 @@ public class NewsActivityFragment extends Fragment {
 
                     db.execSQL("INSERT INTO post_table (title, author, date, comments, url) " +
                             "VALUES ('"+title+"', '"+author+"', '"+date+"','"+comments+"','"+url+"')");
-                }
+                }*/
             }
             Cursor cursor = db.rawQuery("select * from post_table", null);
             if (cursor.moveToFirst()) {
@@ -114,6 +116,23 @@ public class NewsActivityFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    public void nextPosts(List<PostModel> list_post, SQLiteDatabase db) {
+        for(int i=0; i <= list_post.size()-1; i++)
+        {
+            String title = list_post.get(i).getTitle();
+            String author = list_post.get(i).getAuthor();
+            String date = list_post.get(i).getDate();
+            String comments = list_post.get(i).getComments();
+            String url = "url";
+            list_post.add(new PostModel(title, author, date, comments, url));
+            //String url = postLst1.get(i).getUrl();
+
+            db.execSQL("INSERT INTO post_table (title, author, date, comments, url) " +
+                    "VALUES ('"+title+"', '"+author+"', '"+date+"','"+comments+"','"+url+"')");
+
+        }
+    }
+
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -139,7 +158,7 @@ public class NewsActivityFragment extends Fragment {
         return builder;
     }
 
-    public static byte[] getBytes(Bitmap bitmap)
+    /*public static byte[] getBytes(Bitmap bitmap)
     {
         ByteArrayOutputStream stream=new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG,0, stream);
@@ -149,5 +168,5 @@ public class NewsActivityFragment extends Fragment {
     public static Bitmap getImage(byte[] image)
     {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
-    }
+    }*/
 }
