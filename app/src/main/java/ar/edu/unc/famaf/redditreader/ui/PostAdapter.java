@@ -37,13 +37,13 @@ import static android.os.AsyncTask.execute;
 
 public class PostAdapter extends ArrayAdapter<PostModel> {
 
-    int rs_id;
-    private List<PostModel> model_list;
+    int rsId;
+    private List<PostModel> modelList;
 
-    public PostAdapter(Context context, int textViewResourceId, List<PostModel> postlist) {
+    public PostAdapter(Context context, int textViewResourceId, List<PostModel> postList) {
         super(context, textViewResourceId);
-        model_list = postlist;
-        rs_id = textViewResourceId;
+        modelList = postList;
+        rsId = textViewResourceId;
     }
 
     static class ViewHolder {
@@ -56,17 +56,17 @@ public class PostAdapter extends ArrayAdapter<PostModel> {
 
     @Override
     public int getCount() {
-        return model_list.size();
+        return modelList.size();
     }
 
     @Override
     public int getPosition(PostModel item) {
-        return model_list.indexOf(item);
+        return modelList.indexOf(item);
     }
 
     @Override
     public PostModel getItem(int position) {
-        return model_list.get(position);
+        return modelList.get(position);
     }
 
     @Override
@@ -76,10 +76,10 @@ public class PostAdapter extends ArrayAdapter<PostModel> {
 
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(rs_id, parent, false);
+            convertView = vi.inflate(rsId, parent, false);
         }
         if (convertView.getTag()==null) {
-            PostModel post_model = model_list.get(position);
+            PostModel postModel = modelList.get(position);
             holder  = new ViewHolder();
             holder.title = (TextView) convertView.findViewById(R.id.title_id);
             holder.author = (TextView) convertView.findViewById(R.id.author_id);
@@ -91,15 +91,15 @@ public class PostAdapter extends ArrayAdapter<PostModel> {
         else {
             holder = (ViewHolder) convertView.getTag();
         }
-        PostModel post_model = model_list.get(position);
+        PostModel postModel = modelList.get(position);
 
-        holder.title.setText(post_model.getTitle());
-        holder.author.setText(post_model.getAuthor());
-        holder.date.setText(post_model.getDate());
-        holder.comments.setText(post_model.getComments());
+        holder.title.setText(postModel.getTitle());
+        holder.author.setText(postModel.getAuthor());
+        holder.date.setText(postModel.getDate());
+        holder.comments.setText(postModel.getComments());
 
         if (holder.image != null) {
-            new DownLoadImageAsyncTask(holder.image).execute(post_model.getUrl());
+            new DownLoadImageAsyncTask(holder.image).execute(postModel.getUrl());
         }
         return convertView;
     }
@@ -117,6 +117,7 @@ public class PostAdapter extends ArrayAdapter<PostModel> {
         }
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (isCancelled()) {
@@ -138,10 +139,12 @@ public class PostAdapter extends ArrayAdapter<PostModel> {
 
         private Bitmap downloadBitmap(String url) {
             HttpURLConnection urlConnection = null;
+            final String DEFAULT_URL_REDDIT_ICON = "http://cdn.revistagq.com/uploads/images/thumbs/201525/reddit_5253_645x485.png";
+
             try {
                 if (!URLUtil.isValidUrl(url)){
                     // Default thumbnail
-                    url = "http://cdn.revistagq.com/uploads/images/thumbs/201525/reddit_5253_645x485.png";
+                    url = DEFAULT_URL_REDDIT_ICON;
                 }
                 URL uri = new URL(url);
                 urlConnection = (HttpURLConnection) uri.openConnection();
@@ -171,7 +174,7 @@ public class PostAdapter extends ArrayAdapter<PostModel> {
 
     @Override
     public boolean isEmpty() {
-        return model_list.isEmpty();
+        return modelList.isEmpty();
     }
 
 

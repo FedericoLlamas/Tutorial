@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.R;
+import ar.edu.unc.famaf.redditreader.backend.Backend;
 import ar.edu.unc.famaf.redditreader.backend.GetTopPostsTask;
 import ar.edu.unc.famaf.redditreader.backend.ReeditDBHelper;
 import ar.edu.unc.famaf.redditreader.backend.TopPostIterator;
@@ -34,139 +35,25 @@ public class NewsActivityFragment extends Fragment implements TopPostIterator {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View lv_view =  inflater.inflate(R.layout.fragment_news, container, false);
-        //final List<PostModel> postLst1 = new ArrayList<PostModel>();
+        View lvView =  inflater.inflate(R.layout.fragment_news, container, false);
+        ArrayList<PostModel> listPost = new ArrayList<PostModel>();
 
-        ReeditDBHelper reedDbHelper =
-                new ReeditDBHelper(getContext(), "POST_DATABASE", null, 1);
+        Backend.getInstance().getTopPosts(getContext(), listPost);
 
-        final List<PostModel> list_post = new ArrayList<PostModel>();
 
-        if (isOnline()){
-            final SQLiteDatabase db = reedDbHelper.getWritableDatabase();
+        adapter = new PostAdapter(getContext(), R.layout.row_layout, listPost);
+        ListView listView = (ListView) lvView.findViewById(R.id.list_view_id);
+        listView.setAdapter(adapter);
 
-            if(db != null)
-            {
-                reedDbHelper.onUpgrade(db, 1, 2);
-
-                //new GetTopPostsTask(postLst1, this).execute();
-
-                new GetTopPostsTask(list_post, this){
-                    protected void onPostExecute(PostModel response){
-                        nextPosts(list_post, db);
-                    }
-                }.execute();
-
-                //TODO borrar, usar un listener.
-
-               // postLst1 = Backend.getInstance().getTopPosts();
-                /*for(int i=0; i <= postLst1.size()-1; i++)
-                {
-                    String title = postLst1.get(i).getTitle();
-                    String author = postLst1.get(i).getAuthor();
-                    String date = postLst1.get(i).getDate();
-                    String comments = postLst1.get(i).getComments();
-                    String url = "url";
-                    //String url = postLst1.get(i).getUrl();
-
-                    db.execSQL("INSERT INTO post_table (title, author, date, comments, url) " +
-                            "VALUES ('"+title+"', '"+author+"', '"+date+"','"+comments+"','"+url+"')");
-                }*/
-            }
-            Cursor cursor = db.rawQuery("select * from post_table", null);
-            if (cursor.moveToFirst()) {
-                while (!cursor.isAfterLast()) {
-                    String title = cursor.getString(cursor.getColumnIndex("title"));
-                    String author = cursor.getString(cursor.getColumnIndex("author"));
-                    String date = cursor.getString(cursor.getColumnIndex("date"));
-                    String comments = cursor.getString(cursor.getColumnIndex("comments"));
-                    String url = cursor.getString(cursor.getColumnIndex("url"));
-                    list_post.add(new PostModel(title, author, date, comments, url));
-                    cursor.moveToNext();
-                }
-            }
-            db.close();
-        }
-        else{
-            buildDialog(getActivity()).show();
-            SQLiteDatabase db = reedDbHelper.getReadableDatabase();
-            Cursor cursor = db.rawQuery("select * from post_table", null);
-
-            if (cursor.moveToFirst()) {
-                while (!cursor.isAfterLast()) {
-                    String title = cursor.getString(cursor.getColumnIndex("title"));
-                    String author = cursor.getString(cursor.getColumnIndex("author"));
-                    String date = cursor.getString(cursor.getColumnIndex("date"));
-                    String comments = cursor.getString(cursor.getColumnIndex("comments"));
-                    String url = cursor.getString(cursor.getColumnIndex("url"));
-                    list_post.add(new PostModel(title, author, date, comments, url));
-                    cursor.moveToNext();
-                }
-            }
-            db.close();
-        }
-        adapter = new PostAdapter(getContext(), R.layout.row_layout, list_post);
-        ListView list_view = (ListView) lv_view.findViewById(R.id.list_view_id);
-        list_view.setAdapter(adapter);
-
-        return lv_view;
+        return lvView;
     }
 
     public void notifyNewsRetrieved() {
         adapter.notifyDataSetChanged();
     }
 
-    public void nextPosts(List<PostModel> list_post, SQLiteDatabase db) {
-        for(int i=0; i <= list_post.size()-1; i++)
-        {
-            String title = list_post.get(i).getTitle();
-            String author = list_post.get(i).getAuthor();
-            String date = list_post.get(i).getDate();
-            String comments = list_post.get(i).getComments();
-            String url = "url";
-            list_post.add(new PostModel(title, author, date, comments, url));
-            //String url = postLst1.get(i).getUrl();
-
-            db.execSQL("INSERT INTO post_table (title, author, date, comments, url) " +
-                    "VALUES ('"+title+"', '"+author+"', '"+date+"','"+comments+"','"+url+"')");
-
-        }
+    @Override
+    public void nextPosts(List<PostModel> listPost) {
+        adapter.notifyDataSetChanged();
     }
-
-    public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-
-    public AlertDialog.Builder buildDialog(Context c) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        builder.setTitle("No Internet connection.");
-        builder.setMessage("You have no internet connection");
-
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                dialog.dismiss();
-            }
-        });
-
-        return builder;
-    }
-
-    /*public static byte[] getBytes(Bitmap bitmap)
-    {
-        ByteArrayOutputStream stream=new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,0, stream);
-        return stream.toByteArray();
-    }
-
-    public static Bitmap getImage(byte[] image)
-    {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
-    }*/
 }

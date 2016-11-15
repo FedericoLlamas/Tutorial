@@ -26,22 +26,30 @@ import static ar.edu.unc.famaf.redditreader.R.string.date;
 
 public class Parser {
 
+    public static final String DATA_KEY = "data";
+    public static final String CHILDREN_KEY = "children";
+    public static final String CREATED_KEY = "created";
+    public static final String TITLE_KEY = "title";
+    public static final String AUTHOR_KEY = "author";
+    public static final String COMMENTS_KEY = "num_comments";
+    public static final String THUMBNAIL_KEY = "thumbnail";
+
     public List<PostModel> readJsonStream(InputStream in) throws IOException, JSONException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         ArrayList<PostModel> list = new ArrayList<PostModel>();
         try {
             JSONObject response = new JSONObject(String.valueOf(reader.readLine()));
-            JSONObject data = response.getJSONObject("data");
-            JSONArray hotTopics = data.getJSONArray("children");
+            JSONObject data = response.getJSONObject(DATA_KEY);
+            JSONArray hotTopics = data.getJSONArray(CHILDREN_KEY);
             for (int i = 0; i < hotTopics.length(); i++) {
-                JSONObject topic = hotTopics.getJSONObject(i).getJSONObject("data");
+                JSONObject topic = hotTopics.getJSONObject(i).getJSONObject(DATA_KEY);
 
-                String time = new SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(Double.valueOf(topic.getLong("created")).longValue()*1000));
-                String title = topic.getString("title");
-                String author = topic.getString("author");
+                String time = new SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(Double.valueOf(topic.getLong(CREATED_KEY)).longValue()*1000));
+                String title = topic.getString(TITLE_KEY);
+                String author = topic.getString(AUTHOR_KEY);
                 String postTime = time.toString();
-                String comment = topic.getString("num_comments");
-                String imageUrl = topic.getString("thumbnail");
+                String comment = topic.getString(COMMENTS_KEY);
+                String imageUrl = topic.getString(THUMBNAIL_KEY);
 
                 list.add(new PostModel(title, author, postTime, comment, imageUrl));
             }

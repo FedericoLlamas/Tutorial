@@ -1,6 +1,5 @@
 package ar.edu.unc.famaf.redditreader.backend;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -14,44 +13,30 @@ import java.util.Iterator;
 import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.model.PostModel;
-import ar.edu.unc.famaf.redditreader.ui.NewsActivityFragment;
 
 
 /**
  * Created by federico on 29/10/16.
  */
 
-public class GetTopPostsTask extends AsyncTask {
+public class GetTopPostsTask extends AsyncTask <Void, Integer, List<PostModel>>{
+    private static final String URL_TO_REDDIIT_API = "https://www.reddit.com/r/todayilearned/top.json?limit=50";
 
-    private List<PostModel> postList;
-    private NewsActivityFragment frgActivity;
-    private ProgressDialog dialog;
-
-
-    /*public GetTopPostsTask(TopPostIterator top_post_iterator){
-        this.top_post_iterator=top_post_iterator;
-    }*/
-
-    public GetTopPostsTask(List<PostModel> postList, NewsActivityFragment listener) {
-        this.postList = postList;
-        this.frgActivity = listener;
+    public GetTopPostsTask() {
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        dialog = new ProgressDialog(this.frgActivity.getContext());
-        dialog.setMessage("Loading...");
-        dialog.show();
     }
 
     @Override
-    protected List<PostModel> doInBackground(Object... params) {
+    protected List<PostModel> doInBackground(Void... params) {
         List<PostModel> listTop50 = null;
         HttpURLConnection conn = null;
         try {
 
-            conn = (HttpURLConnection) new URL("https://www.reddit.com/r/todayilearned/top.json?limit=50").openConnection();
+            conn = (HttpURLConnection) new URL(URL_TO_REDDIIT_API).openConnection();
             conn.setRequestMethod("GET");
             conn.connect();
             int resCode = conn.getResponseCode();
@@ -62,9 +47,6 @@ public class GetTopPostsTask extends AsyncTask {
             }
 
             Iterator<PostModel> it = listTop50.iterator();
-            while (it.hasNext()) {
-                postList.add(it.next());
-            }
         } catch (IOException e) {
             Log.e("PlaceholderFragment", "Error ", e);
             return null;
@@ -75,16 +57,11 @@ public class GetTopPostsTask extends AsyncTask {
                 conn.disconnect();
             }
         }
-
         return listTop50;
     }
 
     @Override
-    protected void onPostExecute(Object o) {
-        super.onPostExecute(o);
-        if (dialog.isShowing()) {
-            dialog.dismiss();
-        }
-        frgActivity.notifyNewsRetrieved();
+    protected void onPostExecute(List<PostModel> listTop50) {
+        super.onPostExecute(listTop50);
     }
 }

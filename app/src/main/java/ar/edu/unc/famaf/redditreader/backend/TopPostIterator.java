@@ -11,5 +11,5 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
  */
 
 public interface TopPostIterator {
-    void nextPosts(List<PostModel> postLst1, SQLiteDatabase db);
+    void nextPosts(List<PostModel> posts);
 }
