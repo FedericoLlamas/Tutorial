@@ -39,7 +39,6 @@ public class NewsActivityFragment extends Fragment implements TopPostIterator {
 
         Backend.getInstance().getTopPosts(getContext(), this);
 
-
         adapter = new PostAdapter(getContext(), R.layout.row_layout, listPost);
         ListView listView = (ListView) lvView.findViewById(R.id.list_view_id);
         listView.setAdapter(adapter);
