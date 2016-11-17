@@ -19,8 +19,6 @@ import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.R;
 import ar.edu.unc.famaf.redditreader.backend.Backend;
-import ar.edu.unc.famaf.redditreader.backend.GetTopPostsTask;
-import ar.edu.unc.famaf.redditreader.backend.ReeditDBHelper;
 import ar.edu.unc.famaf.redditreader.backend.TopPostIterator;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
@@ -28,6 +26,7 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
  * A placeholder fragment containing a simple view.
  */
 public class NewsActivityFragment extends Fragment implements TopPostIterator {
+
     PostAdapter adapter;
     public NewsActivityFragment() {
     }
@@ -38,7 +37,7 @@ public class NewsActivityFragment extends Fragment implements TopPostIterator {
         View lvView =  inflater.inflate(R.layout.fragment_news, container, false);
         ArrayList<PostModel> listPost = new ArrayList<PostModel>();
 
-        Backend.getInstance().getTopPosts(getContext(), listPost);
+        Backend.getInstance().getTopPosts(getContext(), this);
 
 
         adapter = new PostAdapter(getContext(), R.layout.row_layout, listPost);
@@ -48,12 +47,10 @@ public class NewsActivityFragment extends Fragment implements TopPostIterator {
         return lvView;
     }
 
-    public void notifyNewsRetrieved() {
-        adapter.notifyDataSetChanged();
-    }
-
     @Override
-    public void nextPosts(List<PostModel> listPost) {
-        adapter.notifyDataSetChanged();
+    public void onPostGot(List<PostModel> listPost) {
+        adapter = new PostAdapter(getContext(), R.layout.row_layout, listPost);
+        ListView listView = (ListView) getView().findViewById(R.id.list_view_id);
+        listView.setAdapter(adapter);
     }
 }
