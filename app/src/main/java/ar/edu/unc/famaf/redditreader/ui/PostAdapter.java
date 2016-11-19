@@ -1,181 +1,218 @@
 package ar.edu.unc.famaf.redditreader.ui;
 
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.R;
+import ar.edu.unc.famaf.redditreader.backend.ReeditDBHelper;
+
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
-import static android.os.AsyncTask.execute;
-
 /**
- * Created by nahuelseiler on 10/10/16.
+ * Created by dvr on 07/10/16.
  */
 
-public class PostAdapter extends ArrayAdapter<PostModel> {
+public class PostAdapter extends ArrayAdapter {
+    private Context context;
+    private int layoutResourceId;
+    private List<PostModel> mListPostModel;
+    private ReeditDBHelper db;
+    private boolean mbusy;
 
-    int rsId;
-    private List<PostModel> modelList;
+    public PostAdapter(Context context, int resource, List<PostModel> list, ReeditDBHelper db, boolean mBusy) {
+        super(context, resource, list);
+        mListPostModel = list;
+        this.context = context;
+        this.layoutResourceId = resource;
+        this.db = db;
+        this.mbusy=mBusy;
 
-    public PostAdapter(Context context, int textViewResourceId, List<PostModel> postList) {
-        super(context, textViewResourceId);
-        modelList = postList;
-        rsId = textViewResourceId;
-    }
-
-    static class ViewHolder {
-        TextView title;
-        TextView author;
-        TextView date;
-        TextView comments;
-        ImageView image;
     }
 
     @Override
     public int getCount() {
-        return modelList.size();
+        return mListPostModel.size();
     }
 
-    @Override
-    public int getPosition(PostModel item) {
-        return modelList.indexOf(item);
-    }
-
+    @Nullable
     @Override
     public PostModel getItem(int position) {
-        return modelList.get(position);
+        return mListPostModel.get(position);
     }
 
+    public int getPosition(PostModel item) {
+        return mListPostModel.indexOf(item);
+    }
+
+    @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final ViewHolder holder;
+        View row = convertView;
+        final PostModelHolder holder;
+        if (row == null) {
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+            row = inflater.inflate(layoutResourceId, parent, false);
 
-        if (convertView == null) {
-            LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(rsId, parent, false);
-        }
-        if (convertView.getTag()==null) {
-            PostModel postModel = modelList.get(position);
-            holder  = new ViewHolder();
-            holder.title = (TextView) convertView.findViewById(R.id.title_id);
-            holder.author = (TextView) convertView.findViewById(R.id.author_id);
-            holder.date = (TextView) convertView.findViewById(R.id.date_id);
-            holder.comments = (TextView) convertView.findViewById(R.id.com_num_id);
-            holder.image = (ImageView) convertView.findViewById(R.id.image_id);
-            convertView.setTag(holder);
-        }
-        else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-        PostModel postModel = modelList.get(position);
+            holder = new PostModelHolder();
+            holder.mAuthor = (TextView) row.findViewById(R.id.author_id);
+            holder.mCreated = (TextView) row.findViewById(R.id.date_id);
+            holder.mSubreddit = (TextView) row.findViewById(R.id.sub_reddit_id);
+            holder.mTitle = (TextView) row.findViewById(R.id.title_id);
+            holder.icon = (ImageView) row.findViewById(R.id.image_id);
+            holder.comments = (TextView) row.findViewById(R.id.comments_id);
+            holder.progressBar = (ProgressBar) row.findViewById(R.id.progress_bar);
+            row.setTag(holder);
 
-        holder.title.setText(postModel.getTitle());
-        holder.author.setText(postModel.getAuthor());
-        holder.date.setText(postModel.getDate());
-        holder.comments.setText(postModel.getComments());
-
-        if (holder.image != null) {
-            new DownLoadImageAsyncTask(holder.image).execute(postModel.getUrl());
+        } else {
+            holder = (PostModelHolder) row.getTag();
         }
-        return convertView;
+        final PostModel model = mListPostModel.get(position);
+
+        holder.mTitle.setText(model.getTitle());
+        holder.mSubreddit.setText(model.getSubreddit());
+        holder.mCreated.setText(setTime(String.valueOf(model.getCreated())));
+        holder.mAuthor.setText(model.getAuthor());
+        holder.comments.setText(String.valueOf(model.getComments()));
+        if (model.getIcon().length > 0) {
+            holder.icon.setImageBitmap(model.getImage(model.getIcon()));
+            holder.progressBar.setVisibility(View.GONE);
+            return row;
+
+        }
+        if (model.getUrl() != null && !mbusy && !model.isDownload()) {
+            DownloadImageTask downloadImageTask = new DownloadImageTask(holder, model);
+            String url = model.getUrl();
+            //URL[] urlArray = new URL[1];
+            //urlArray[0] = new URL(url);
+            downloadImageTask.execute(url);
+        }
+        return row;
     }
 
-    class DownLoadImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
 
-        public DownLoadImageAsyncTask(ImageView imageView) {
-            imageViewReference = new WeakReference<ImageView>(imageView);
-        }
+    private String setTime(String time) {
+        /*crear hora*/
+        String timestamp = String.valueOf(time);
+        Date createdOn = new Date(Long.parseLong(timestamp));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = sdf.format(createdOn);
 
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            return downloadBitmap(params[0]);
-        }
+        return String.valueOf(formattedDate);
 
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    }
 
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (isCancelled()) {
-                bitmap = null;
-            }
-
-            if (imageViewReference != null) {
-                ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    if (bitmap != null) {
-                        imageView.setImageBitmap(bitmap);
-                    } else {
-                        Drawable placeholder = imageView.getContext().getDrawable(R.drawable.icono);
-                        imageView.setImageDrawable(placeholder);
-                    }
-                }
-            }
-        }
-
-        private Bitmap downloadBitmap(String url) {
-            HttpURLConnection urlConnection = null;
-            final String DEFAULT_URL_REDDIT_ICON = "http://cdn.revistagq.com/uploads/images/thumbs/201525/reddit_5253_645x485.png";
-
-            try {
-                if (!URLUtil.isValidUrl(url)){
-                    // Default thumbnail
-                    url = DEFAULT_URL_REDDIT_ICON;
-                }
-                URL uri = new URL(url);
-                urlConnection = (HttpURLConnection) uri.openConnection();
-                int statusCode = urlConnection.getResponseCode();
-                if (statusCode != HttpURLConnection.HTTP_OK) {
-                    return null;
-                }
-
-                InputStream inputStream = urlConnection.getInputStream();
-                if (inputStream != null) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    return bitmap;
-                }
-            } catch (Exception e) {
-                assert urlConnection != null;
-                urlConnection.disconnect();
-                Log.e("MYAPP", "exception", e);
-                Log.w("ImageDownloader", "Error downloading image from " + url);
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-            }
-            return null;
-        }
+    private class PostModelHolder {
+        TextView mTitle;
+        TextView mSubreddit;
+        TextView mCreated;
+        TextView mAuthor;
+        ImageView icon;
+        TextView comments;
+        ProgressBar progressBar;
     }
 
     @Override
     public boolean isEmpty() {
-        return modelList.isEmpty();
+        return mListPostModel.isEmpty();
     }
 
 
+    private class DownloadImageTask extends AsyncTask<String, Integer, Bitmap> {
+        PostModelHolder holder = null;
+        PostModel model;
+
+
+        public DownloadImageTask(PostModelHolder holder, PostModel model) {
+            this.holder = holder;
+            this.model = model;
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            holder.progressBar.setVisibility(View.VISIBLE);
+            model.setDownload(true);
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String url = urls[0];
+            System.out.println(url);
+            Bitmap bitmap = null;
+            bitmap = downloadBitmap(url);
+            byte[] image = model.getBytes(bitmap);
+            model.setIcon(image);
+            db.updateImage(model);
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            if (result != null) {
+                holder.icon.setImageBitmap(result);
+            }
+            holder.progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private Bitmap downloadBitmap(String url) {
+        HttpURLConnection urlConnection = null;
+        final String DEFAULT_URL_REDDIT_ICON = "http://cdn.revistagq.com/uploads/images/thumbs/201525/reddit_5253_645x485.png";
+
+        try {
+            if (!URLUtil.isValidUrl(url)){
+                // Default thumbnail
+                url = DEFAULT_URL_REDDIT_ICON;
+            }
+            URL uri = new URL(url);
+            urlConnection = (HttpURLConnection) uri.openConnection();
+            int statusCode = urlConnection.getResponseCode();
+            if (statusCode != HttpURLConnection.HTTP_OK) {
+                return null;
+            }
+
+            InputStream inputStream = urlConnection.getInputStream();
+            if (inputStream != null) {
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                return bitmap;
+            }
+        } catch (Exception e) {
+            assert urlConnection != null;
+            urlConnection.disconnect();
+            Log.e("MYAPP", "exception", e);
+            Log.w("ImageDownloader", "Error downloading image from " + url);
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+        return null;
+    }
 }

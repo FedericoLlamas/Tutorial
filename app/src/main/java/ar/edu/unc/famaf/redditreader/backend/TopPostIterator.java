@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.List;
 
+import ar.edu.unc.famaf.redditreader.model.Listing;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 /**
@@ -11,5 +12,5 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
  */
 
 public interface TopPostIterator {
-    void onPostGot(List<PostModel> posts);
+    void nextPosts(List<PostModel> lst, ReeditDBHelper db);
 }

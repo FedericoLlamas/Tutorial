@@ -1,95 +1,61 @@
 package ar.edu.unc.famaf.redditreader.backend;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+
 import android.os.AsyncTask;
-import android.util.Log;
-
-import org.json.JSONException;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
-import java.util.List;
-
-import ar.edu.unc.famaf.redditreader.model.PostModel;
-
+import ar.edu.unc.famaf.redditreader.model.Listing;
 
 /**
- * Created by federico on 29/10/16.
+ * Created by dvr on 20/10/16.
  */
 
-public class GetTopPostsTask extends AsyncTask <Void, Integer, List<PostModel>>{
-    private static final String URL_TO_REDDIT_API = "https://www.reddit.com/r/todayilearned/top.json?limit=50";
-    private TopPostIterator listener;
-    private Context context;
+public class GetTopPostsTask extends AsyncTask<String, Integer,Listing> {
+    private String after;
+    private int offset;
 
-    public GetTopPostsTask(Context context, TopPostIterator listener) {
-        this.listener = listener;
-        this.context = context;
-
-    }
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
+    public GetTopPostsTask(String after, int offset){
+        this.after= after;
+        this.offset=offset;
     }
 
     @Override
-    protected List<PostModel> doInBackground(Void... params) {
-        List<PostModel> listTop50 = null;
-        HttpURLConnection conn = null;
-        try {
-
-            conn = (HttpURLConnection) new URL(URL_TO_REDDIT_API).openConnection();
-            conn.setRequestMethod("GET");
-            conn.connect();
-            int resCode = conn.getResponseCode();
-
-            if (resCode == HttpURLConnection.HTTP_OK) {
-                InputStream inputStream = conn.getInputStream();
-                listTop50 = new Parser().readJsonStream(inputStream);
-            }
-            ReeditDBHelper readDbHelper = new ReeditDBHelper(context);
-            SQLiteDatabase db = readDbHelper.getWritableDatabase();
-            if(db != null)
-            {
-                readDbHelper.removeData();
-                for(int i=0; i <= listTop50.size()-1; i++)
-                {
-                    String title = listTop50.get(i).getTitle();
-                    String author = listTop50.get(i).getAuthor();
-                    String date = listTop50.get(i).getDate();
-                    String comments = listTop50.get(i).getComments();
-                    String url = listTop50.get(i).getUrl();
-
-                    ContentValues values = new ContentValues();
-                    values.put("title", title);
-                    values.put("author", author);
-                    values.put("date", date);
-                    values.put("comments", comments);
-                    values.put("url", url);
-
-                    long newRowId = db.insert("post_table", null, values);
-                }
-            }
-        } catch (IOException e) {
-            Log.e("PlaceholderFragment", "Error ", e);
-            return null;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } finally{
-            if (conn != null) {
-                conn.disconnect();
-            }
+    protected Listing doInBackground(String... params) {
+        String url;
+        if(after!=null){
+            url= params[0]+"&count="+ String.valueOf(offset)+"&after="+after;
+        }else {
+            url = params[0];
         }
-        return listTop50;
+        System.out.println("URL...: "+url);
+        HttpURLConnection hcon;
+        try {
+            hcon=(HttpURLConnection)new URL(url).openConnection();
+            hcon.setReadTimeout(30000); // Timeout at 30 seconds
+            //hcon.setRequestProperty("User-Agent", "Alien V1.0");
+            hcon.setRequestMethod("GET");
+            Parser list = new Parser();
+            return list.readJsonStream(hcon.getInputStream());
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
+
     @Override
-    protected void onPostExecute(List<PostModel> listTop50) {
-        super.onPostExecute(listTop50);
-        listener.onPostGot(listTop50);
+    protected void onPostExecute(Listing input) {
+        super.onPostExecute(input);
     }
+
+
+
 }

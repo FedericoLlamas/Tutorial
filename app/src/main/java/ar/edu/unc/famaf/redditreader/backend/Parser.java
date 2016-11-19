@@ -1,66 +1,134 @@
 package ar.edu.unc.famaf.redditreader.backend;
 
-import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.util.JsonReader;
+import android.util.JsonToken;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import ar.edu.unc.famaf.redditreader.R;
+import ar.edu.unc.famaf.redditreader.model.Listing;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
-
-import static ar.edu.unc.famaf.redditreader.R.string.date;
-
-/**
- * Created by federico on 29/10/16.
- */
 
 public class Parser {
 
-    public static final String DATA_KEY = "data";
-    public static final String CHILDREN_KEY = "children";
-    public static final String CREATED_KEY = "created";
-    public static final String TITLE_KEY = "title";
-    public static final String AUTHOR_KEY = "author";
-    public static final String COMMENTS_KEY = "num_comments";
-    public static final String THUMBNAIL_KEY = "thumbnail";
-
-    public List<PostModel> readJsonStream(InputStream in) throws IOException, JSONException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        ArrayList<PostModel> list = new ArrayList<PostModel>();
+    public Listing readJsonStream(InputStream in) throws IOException {
+        // Nueva instancia JsonReader
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
         try {
-            JSONObject response = new JSONObject(String.valueOf(reader.readLine()));
-            JSONObject data = response.getJSONObject(DATA_KEY);
-            JSONArray hotTopics = data.getJSONArray(CHILDREN_KEY);
-            for (int i = 0; i < hotTopics.length(); i++) {
-                JSONObject topic = hotTopics.getJSONObject(i).getJSONObject(DATA_KEY);
-
-                String time = new SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(Double.valueOf(topic.getLong(CREATED_KEY)).longValue()*1000));
-                String title = topic.getString(TITLE_KEY);
-                String author = topic.getString(AUTHOR_KEY);
-                String postTime = time.toString();
-                String comment = topic.getString(COMMENTS_KEY);
-                String imageUrl = topic.getString(THUMBNAIL_KEY);
-
-                list.add(new PostModel(title, author, postTime, comment, imageUrl));
-            }
-            return list;
-
-        } catch (IOException e) {
-            Log.e("PlaceholderFragment", "Error ", e);
-            return null;
-        } catch (JSONException e) {
-            e.printStackTrace();
+            // Leer Array
+            return ArrayData(reader);
+        } finally {
+            reader.close();
         }
+
+    }
+
+    public Listing ArrayData(JsonReader reader) throws IOException {
+        Listing list=null;
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            if (name.equals("data")) {
+                list = readData(reader);
+                break;
+            } else {
+                reader.skipValue();
+            }
+        }
+        //reader.endObject();
+        return list;
+
+    }
+
+    Listing readData(JsonReader reader) throws IOException {
+        Listing list=null;
+        String before=null;
+        String after=null;
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            if (name.equals("children")) {
+                list = readChildren(reader);
+                //break;
+            }else if (name.equals("after")){
+                after=reader.nextString();
+            }else if(name.equals("before") && reader.peek()!= JsonToken.NULL){
+                before=reader.nextString();
+            } else {
+                reader.skipValue();
+            }
+        }
+        list.setBefore(before);
+        list.setAfter(after);
+        //reader.endObject();
         return list;
     }
+
+    Listing readChildren(JsonReader reader) throws IOException {
+        Listing listing = new Listing();
+
+        reader.beginArray();
+        while (reader.hasNext()) {
+            listing.add(readMessage(reader));
+        }
+        reader.endArray();
+        return listing;
+
+    }
+
+    public PostModel readMessage(JsonReader reader) throws IOException {
+        PostModel obj = null;
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            if (name.equals("data")) {
+                obj = readObj(reader);
+                //break;
+            } else {
+                reader.skipValue();
+            }
+        }
+        reader.endObject();
+        return obj;
+    }
+
+    public PostModel readObj(JsonReader reader) throws IOException {
+        PostModel post = new PostModel();
+        post.setIcon(new byte[0]);
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            switch (name) {
+                case "title":
+                    post.setTitle(reader.nextString());
+                    break;
+                case "subreddit":
+                    post.setSubreddit(reader.nextString());
+                    break;
+                case "created":
+                    post.setCreated(reader.nextInt());
+                    break;
+                case "author":
+                    post.setAuthor(reader.nextString());
+                    break;
+                case "thumbnail":
+                    post.setUrl(reader.nextString());
+                    break;
+                case "num_comments":
+                    post.setComments(reader.nextInt());
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
+        }
+        reader.endObject();
+
+        return post;
+    }
+
 }

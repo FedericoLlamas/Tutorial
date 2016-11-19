@@ -10,6 +10,18 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/image_id"
+            android:layout_alignBottom="@+id/image_id"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/image_id"
+            android:layout_alignEnd="@+id/image_id" />
+
         <ImageView
             android:id="@+id/image_id"
             android:layout_alignParentLeft="true"
@@ -27,19 +39,6 @@
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/image_id"
             android:layout_toEndOf="@+id/image_id" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/date"
-            android:id="@+id/date_id"
-            android:layout_marginLeft="27dp"
-            android:layout_marginStart="27dp"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/author_id"
-            android:layout_toEndOf="@+id/author_id" />
 
 
         <TextView
@@ -64,16 +63,6 @@
             android:layout_toEndOf="@+id/img_comm_id" />
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" Comments"
-            android:id="@+id/comments_id"
-            android:textSize="16sp"
-            android:layout_below="@+id/title_id"
-            android:layout_toRightOf="@+id/com_num_id"
-            android:layout_toEndOf="@+id/com_num_id" />
-
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,6 +83,35 @@
             android:layout_marginTop="29dp"
             android:background="@android:drawable/ic_media_play"
             android:backgroundTint="@color/abc_secondary_text_material_light" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" Comments"
+            android:id="@+id/comments_id"
+            android:textSize="16sp"
+            android:layout_below="@+id/title_id"
+            android:layout_alignRight="@+id/title_id"
+            android:layout_alignEnd="@+id/title_id" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/date"
+            android:id="@+id/date_id"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/arrow_id"
+            android:layout_toStartOf="@+id/arrow_id" />
+
+        <TextView
+            android:text="@string/subreddit"
+            android:id="@+id/sub_reddit_id"
+            android:layout_width="110sp"
+            android:layout_height="20sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/com_num_id"
+            android:layout_alignEnd="@+id/com_num_id" />
 
 
     </RelativeLayout>
