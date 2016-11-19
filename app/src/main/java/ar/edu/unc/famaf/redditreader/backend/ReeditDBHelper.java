@@ -32,7 +32,7 @@ public class ReeditDBHelper {
 
     private class DatabaseHelper extends SQLiteOpenHelper {
         private static final int DATABASE_VERSION = 1;
-        private static final String DATABASE_NAME = "reddit.db";
+        private static final String DATABASE_NAME = "redditPost.db";
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -82,7 +82,6 @@ public class ReeditDBHelper {
         db = DBHelper.getWritableDatabase();
         for(int i=0; i<list.size(); i++){
             db.insert(RedditEntryApi.Entry.TABLE_NAME, null,  list.get(i).toContentValues());
-            /*Guardo el id en el postmodel*/
             Cursor c = db.query(RedditEntryApi.Entry.TABLE_NAME, null, RedditEntryApi.Entry.AUTHOR + " LIKE ?",
                     new String[]{list.get(i).getAuthor()}, null, null, null);
             if (c != null){
@@ -133,5 +132,4 @@ public class ReeditDBHelper {
         }
         return list;
     }
-
 }

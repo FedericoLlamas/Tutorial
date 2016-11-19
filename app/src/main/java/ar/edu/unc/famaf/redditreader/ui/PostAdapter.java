@@ -40,16 +40,16 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 public class PostAdapter extends ArrayAdapter {
     private Context context;
-    private int layoutResourceId;
-    private List<PostModel> mListPostModel;
+    private int rsId;
+    private List<PostModel> ListPostModel;
     private ReeditDBHelper db;
     private boolean mbusy;
 
     public PostAdapter(Context context, int resource, List<PostModel> list, ReeditDBHelper db, boolean mBusy) {
         super(context, resource, list);
-        mListPostModel = list;
+        ListPostModel = list;
         this.context = context;
-        this.layoutResourceId = resource;
+        this.rsId = resource;
         this.db = db;
         this.mbusy=mBusy;
 
@@ -57,17 +57,17 @@ public class PostAdapter extends ArrayAdapter {
 
     @Override
     public int getCount() {
-        return mListPostModel.size();
+        return ListPostModel.size();
     }
 
     @Nullable
     @Override
     public PostModel getItem(int position) {
-        return mListPostModel.get(position);
+        return ListPostModel.get(position);
     }
 
     public int getPosition(PostModel item) {
-        return mListPostModel.indexOf(item);
+        return ListPostModel.indexOf(item);
     }
 
     @NonNull
@@ -78,13 +78,13 @@ public class PostAdapter extends ArrayAdapter {
         final PostModelHolder holder;
         if (row == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
+            row = inflater.inflate(rsId, parent, false);
 
             holder = new PostModelHolder();
-            holder.mAuthor = (TextView) row.findViewById(R.id.author_id);
-            holder.mCreated = (TextView) row.findViewById(R.id.date_id);
-            holder.mSubreddit = (TextView) row.findViewById(R.id.sub_reddit_id);
-            holder.mTitle = (TextView) row.findViewById(R.id.title_id);
+            holder.author = (TextView) row.findViewById(R.id.author_id);
+            holder.creted = (TextView) row.findViewById(R.id.date_id);
+            holder.subReddit = (TextView) row.findViewById(R.id.sub_reddit_id);
+            holder.title = (TextView) row.findViewById(R.id.title_id);
             holder.icon = (ImageView) row.findViewById(R.id.image_id);
             holder.comments = (TextView) row.findViewById(R.id.comments_id);
             holder.progressBar = (ProgressBar) row.findViewById(R.id.progress_bar);
@@ -93,12 +93,12 @@ public class PostAdapter extends ArrayAdapter {
         } else {
             holder = (PostModelHolder) row.getTag();
         }
-        final PostModel model = mListPostModel.get(position);
+        final PostModel model = ListPostModel.get(position);
 
-        holder.mTitle.setText(model.getTitle());
-        holder.mSubreddit.setText(model.getSubreddit());
-        holder.mCreated.setText(setTime(String.valueOf(model.getCreated())));
-        holder.mAuthor.setText(model.getAuthor());
+        holder.title.setText(model.getTitle());
+        holder.subReddit.setText(model.getSubreddit());
+        holder.creted.setText(setTime(String.valueOf(model.getCreated())));
+        holder.author.setText(model.getAuthor());
         holder.comments.setText(String.valueOf(model.getComments()));
         if (model.getIcon().length > 0) {
             holder.icon.setImageBitmap(model.getImage(model.getIcon()));
@@ -109,8 +109,6 @@ public class PostAdapter extends ArrayAdapter {
         if (model.getUrl() != null && !mbusy && !model.isDownload()) {
             DownloadImageTask downloadImageTask = new DownloadImageTask(holder, model);
             String url = model.getUrl();
-            //URL[] urlArray = new URL[1];
-            //urlArray[0] = new URL(url);
             downloadImageTask.execute(url);
         }
         return row;
@@ -118,7 +116,6 @@ public class PostAdapter extends ArrayAdapter {
 
 
     private String setTime(String time) {
-        /*crear hora*/
         String timestamp = String.valueOf(time);
         Date createdOn = new Date(Long.parseLong(timestamp));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -129,10 +126,10 @@ public class PostAdapter extends ArrayAdapter {
     }
 
     private class PostModelHolder {
-        TextView mTitle;
-        TextView mSubreddit;
-        TextView mCreated;
-        TextView mAuthor;
+        TextView title;
+        TextView subReddit;
+        TextView creted;
+        TextView author;
         ImageView icon;
         TextView comments;
         ProgressBar progressBar;
@@ -140,7 +137,7 @@ public class PostAdapter extends ArrayAdapter {
 
     @Override
     public boolean isEmpty() {
-        return mListPostModel.isEmpty();
+        return ListPostModel.isEmpty();
     }
 
 
@@ -206,8 +203,8 @@ public class PostAdapter extends ArrayAdapter {
         } catch (Exception e) {
             assert urlConnection != null;
             urlConnection.disconnect();
-            Log.e("MYAPP", "exception", e);
-            Log.w("ImageDownloader", "Error downloading image from " + url);
+            System.out.println("exception: "+e);
+            System.out.println("ImageDownloader, Error from: "+url);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();

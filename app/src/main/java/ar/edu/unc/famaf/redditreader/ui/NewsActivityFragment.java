@@ -28,7 +28,6 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
  */
 public class NewsActivityFragment extends Fragment{
 
-    PostAdapter adapter;
     public NewsActivityFragment() {
     }
 
@@ -36,15 +35,14 @@ public class NewsActivityFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View lvView =  inflater.inflate(R.layout.fragment_news, container, false);
-
-        final List<PostModel> list= new ArrayList<>();
+        final List<PostModel> listPost= new ArrayList<>();
         final boolean[] mBusy = new boolean[1];
 
-        Backend.getInstance().getTopPosts(0,getContext(), new TopPostIterator() {
+        Backend.getInstance().getTopPosts(0, getContext(), new TopPostIterator() {
             @Override
-            public void nextPosts(List<PostModel> lst, ReeditDBHelper db) {
-                list.addAll(lst);
-                final PostAdapter adapter = new PostAdapter(getActivity(), R.layout.row_layout, list, db, mBusy[0]);
+            public void nextPosts(List<PostModel> list, ReeditDBHelper db) {
+                listPost.addAll(list);
+                final PostAdapter adapter = new PostAdapter(getActivity(), R.layout.row_layout, listPost, db, mBusy[0]);
                 final ListView lv = (ListView) getView().findViewById(R.id.list_view_id);
                 lv.setAdapter(adapter);
 
@@ -52,26 +50,21 @@ public class NewsActivityFragment extends Fragment{
                     private int currentScrollState;
                     @Override
                     public boolean onLoadMore(int page, int totalItemsCount) {
-                        System.out.println("on load more");
-                        // Triggered only when new data needs to be appended to the list
-                        // Add whatever code is needed to append new items to your AdapterView
-                        //loadNextDataFromApi(page);
-                        System.out.println("totalItemCount"+totalItemsCount);
+                        System.out.println("Load 5 more");
+                        System.out.println("Total loaded: "+totalItemsCount);
                         Backend.getInstance().getTopPosts(totalItemsCount, getContext(), new TopPostIterator() {
                             @Override
-                            public void nextPosts(List<PostModel> lst, ReeditDBHelper db) {
-                                list.addAll(lst);
+                            public void nextPosts(List<PostModel> list, ReeditDBHelper db) {
+                                listPost.addAll(list);
                                 adapter.notifyDataSetChanged();
                             }
                         });
-                        // or loadNextDataFromApi(totalItemsCount);
-                        return true; // ONLY if more data is actually being loaded; false otherwise.
+                        return true;
                     }
 
                     @Override
                     public void onScrollStateChanged(AbsListView view, int scrollState) {
                         super.onScrollStateChanged(view, scrollState);
-                        this.currentScrollState = scrollState;
 
                         switch (scrollState) {
                             case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
@@ -84,18 +77,13 @@ public class NewsActivityFragment extends Fragment{
                             case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
                                 mBusy[0] = true;
                                 break;
-
                         }
                     }
-
                 });
 
 
             }
         });
         return lvView;
-    }
-
-    public void loadNextDataFromApi(int offset) {
     }
 }

@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class RedditEntryApi {
     public static abstract class Entry implements BaseColumns {
-        public static final String TABLE_NAME="postModel";
+        public static final String TABLE_NAME="top_post_model";
         public static final String ID="id";
         public static final String AUTHOR="mAuthor";
         public static final String TITLE="mTitle";
