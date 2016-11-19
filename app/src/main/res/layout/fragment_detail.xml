@@ -1,0 +1,20 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/news_detail_activity_fragment_id"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ar.edu.unc.famaf.redditreader.ui.NewsDetailActivityFragment"
+    tools:showIn="@layout/activity_detail">
+
+    <TextView
+        android:text="Title on post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="111dp"
+        android:id="@+id/detail_text_id"
+        android:textSize="30sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
+
+
