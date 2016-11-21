@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +106,7 @@ public class ReeditDBHelper {
     public List<PostModel> getAllDb(){
         List<PostModel> list = new ArrayList<PostModel>();
         offset=totalItemsCount;
+
         System.out.println("Recuperando datos de la base offset...................." + this.offset);
         String selectQuery2 = "SELECT  * FROM " + RedditEntryApi.Entry.TABLE_NAME + " LIMIT 5 OFFSET "+ String.valueOf(this.offset);
         try {

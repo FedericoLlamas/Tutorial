@@ -1,5 +1,6 @@
 package ar.edu.unc.famaf.redditreader.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,9 +10,11 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import ar.edu.unc.famaf.redditreader.R;
+import ar.edu.unc.famaf.redditreader.backend.OnPostItemSelectedListener;
+import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 
-public class NewsActivity extends AppCompatActivity {
+public class NewsActivity extends AppCompatActivity implements OnPostItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,4 +45,24 @@ public class NewsActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onPostItemPicked(PostModel postModel) {
+        Intent intent = new Intent(this, NewsDetailActivity.class);
+        if (postModel != null){
+            intent.putExtra("icon",postModel.getIcon());
+            intent.putExtra("title",postModel.getTitle());
+            intent.putExtra("author",postModel.getAuthor());
+            intent.putExtra("subreddit",postModel.getSubreddit());
+            intent.putExtra("date",String.valueOf(postModel.getCreated()));
+            intent.putExtra("url",postModel.getUrl());
+            intent.putExtra("comment",postModel.getComments());
+            startActivityForResult(intent, 0);
+        }
+
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+    }
 }
