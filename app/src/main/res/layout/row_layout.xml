@@ -33,16 +33,6 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/author_id"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/image_id"
-            android:layout_toEndOf="@+id/image_id" />
-
-
-        <TextView
             android:layout_width="200dp"
             android:layout_height="80dp"
             android:text="@string/titlePost"
@@ -108,11 +98,21 @@
         <TextView
             android:text="@string/subreddit"
             android:id="@+id/sub_reddit_id"
-            android:layout_width="110sp"
+            android:layout_width="50sp"
             android:layout_height="20sp"
             android:layout_alignParentTop="true"
-            android:layout_alignRight="@+id/com_num_id"
-            android:layout_alignEnd="@+id/com_num_id" />
+            android:layout_toStartOf="@+id/date_id" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/author_id"
+            android:textSize="16sp"
+            android:text="author_id"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/image_id"
+            android:layout_toEndOf="@+id/image_id" />
 
 
     </RelativeLayout>

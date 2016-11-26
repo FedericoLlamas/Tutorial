@@ -17,17 +17,7 @@ import java.util.Date;
 
 import ar.edu.unc.famaf.redditreader.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NewsDetailActivityFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NewsDetailActivityFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class NewsDetailActivityFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_ICON = "icon";
     private static final String ARG_TITLE = "title";
     private static final String ARG_AUTHOR= "author";
@@ -37,7 +27,6 @@ public class NewsDetailActivityFragment extends Fragment {
     private static final String ARG_COMMENTS = "comment";
 
 
-    // TODO: Rename and change types of parameters
     private byte[] icon;
     private String title;
     private String author;
@@ -49,18 +38,8 @@ public class NewsDetailActivityFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public NewsDetailActivityFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NewsDetailActivityFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static NewsDetailActivityFragment newInstance(byte[] param1, String param2, String param3,
                                                          String param4, String param5, String param6,
                                                          int param7) {
@@ -94,7 +73,6 @@ public class NewsDetailActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View detailView = inflater.inflate(R.layout.fragment_news_detail_activity, container, false);
         TextView text1 = (TextView) detailView.findViewById(R.id.detail_title_id );
         text1.setText(title);
@@ -139,13 +117,6 @@ public class NewsDetailActivityFragment extends Fragment {
         return b;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -163,18 +134,7 @@ public class NewsDetailActivityFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

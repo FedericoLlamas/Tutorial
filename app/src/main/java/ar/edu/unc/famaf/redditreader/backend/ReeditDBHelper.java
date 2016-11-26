@@ -72,7 +72,6 @@ public class ReeditDBHelper {
     }
 
     public void close() {
-        //Close any open database object.
         DBHelper.close();
     }
 
@@ -108,7 +107,6 @@ public class ReeditDBHelper {
         List<PostModel> list = new ArrayList<PostModel>();
         offset=totalItemsCount;
 
-        System.out.println("Recuperando datos de la base offset...................." + this.offset);
         String selectQuery2 = "SELECT  * FROM " + RedditEntryApi.Entry.TABLE_NAME + " LIMIT 5 OFFSET "+ String.valueOf(this.offset);
         try {
             Cursor cursor = db.rawQuery(selectQuery2, null);

@@ -35,7 +35,7 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
  */
 public class NewsActivityFragment extends Fragment{
 
-    OnPostItemSelectedListener itemSelectedListener;
+    OnPostItemSelectedListener listener;
     PostAdapter adapter;
 
     public NewsActivityFragment() {
@@ -46,7 +46,7 @@ public class NewsActivityFragment extends Fragment{
         super.onAttach(context);
         Activity a=getActivity();
         try {
-            itemSelectedListener  = (OnPostItemSelectedListener) a;
+            listener  = (OnPostItemSelectedListener) a;
         } catch (ClassCastException e) {
         }
     }
@@ -68,10 +68,9 @@ public class NewsActivityFragment extends Fragment{
                 lv.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        System.out.println("CLICKED ON POSTMODEL");
                         PostModel postModelElement = listPost.get(position);
                         if (postModelElement != null){
-                            itemSelectedListener.onPostItemPicked(postModelElement);
+                            listener.onPostItemPicked(postModelElement);
                         }
                     }
                 });
@@ -82,9 +81,6 @@ public class NewsActivityFragment extends Fragment{
         lv.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-                System.out.println("LOAD MORE");
-                System.out.println("Load 5 more");
-                System.out.println("Total loaded: "+totalItemsCount);
                 Backend.getInstance().getTopPosts(totalItemsCount, getContext(), new TopPostIterator() {
                     @Override
                     public void nextPosts(List<PostModel> list, ReeditDBHelper db) {
@@ -93,23 +89,6 @@ public class NewsActivityFragment extends Fragment{
                     }
                 });
                 return true;
-            }
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                super.onScrollStateChanged(view, scrollState);
-                switch (scrollState) {
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        mBusy[0] = false;
-                        adapter.notifyDataSetChanged();
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-                        mBusy[0] = true;
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                        mBusy[0] = true;
-                        break;
-                }
             }
         });
         return lvView;

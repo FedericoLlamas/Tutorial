@@ -203,8 +203,6 @@ public class PostAdapter extends ArrayAdapter {
         } catch (Exception e) {
             assert urlConnection != null;
             urlConnection.disconnect();
-            System.out.println("exception: "+e);
-            System.out.println("ImageDownloader, Error from: "+url);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();

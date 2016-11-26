@@ -30,7 +30,6 @@ public class GetTopPostsTask extends AsyncTask<String, Integer, Listing> {
         }else {
             url = params[0];
         }
-        System.out.println("URL...: "+url);
         HttpURLConnection connection;
         try {
             connection=(HttpURLConnection)new URL(url).openConnection();
@@ -41,8 +40,6 @@ public class GetTopPostsTask extends AsyncTask<String, Integer, Listing> {
             return list.readJsonStream(connection.getInputStream());
 
         } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
