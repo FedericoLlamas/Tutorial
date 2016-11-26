@@ -82,7 +82,7 @@ public class PostAdapter extends ArrayAdapter {
 
             holder = new PostModelHolder();
             holder.author = (TextView) row.findViewById(R.id.author_id);
-            holder.creted = (TextView) row.findViewById(R.id.date_id);
+            holder.created = (TextView) row.findViewById(R.id.date_id);
             holder.subReddit = (TextView) row.findViewById(R.id.sub_reddit_id);
             holder.title = (TextView) row.findViewById(R.id.title_id);
             holder.icon = (ImageView) row.findViewById(R.id.image_id);
@@ -97,7 +97,7 @@ public class PostAdapter extends ArrayAdapter {
 
         holder.title.setText(model.getTitle());
         holder.subReddit.setText(model.getSubreddit());
-        holder.creted.setText(setTime(String.valueOf(model.getCreated())));
+        holder.created.setText(setTime(String.valueOf(model.getCreated())));
         holder.author.setText(model.getAuthor());
         holder.comments.setText(String.valueOf(model.getComments()));
         if (model.getIcon().length > 0) {
@@ -106,10 +106,10 @@ public class PostAdapter extends ArrayAdapter {
             return row;
 
         }
-        if (model.getUrl() != null && !mbusy && !model.isDownload()) {
+        if (model.getThumbnail() != null && !mbusy && !model.isDownload()) {
             DownloadImageTask downloadImageTask = new DownloadImageTask(holder, model);
-            String url = model.getUrl();
-            downloadImageTask.execute(url);
+            String thumbnail = model.getThumbnail();
+            downloadImageTask.execute(thumbnail);
         }
         return row;
     }
@@ -128,7 +128,7 @@ public class PostAdapter extends ArrayAdapter {
     private class PostModelHolder {
         TextView title;
         TextView subReddit;
-        TextView creted;
+        TextView created;
         TextView author;
         ImageView icon;
         TextView comments;

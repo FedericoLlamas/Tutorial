@@ -50,6 +50,7 @@ public class ReeditDBHelper {
                         + RedditEntryApi.Entry.COMMENTS + " TEXT,"
                         + RedditEntryApi.Entry.CREATED + " TEXT,"
                         + RedditEntryApi.Entry.URL + " TEXT,"
+                        + RedditEntryApi.Entry.THUMBNAIL + " TEXT,"
                         + RedditEntryApi.Entry.ICON + " BLOB,"
                         + "UNIQUE (" + RedditEntryApi.Entry.ID + "))");
             } catch (SQLException e) {
@@ -121,6 +122,7 @@ public class ReeditDBHelper {
                     postModel.setComments(Integer.parseInt(cursor.getString(cursor.getColumnIndex(RedditEntryApi.Entry.COMMENTS))));
                     postModel.setCreated(Integer.parseInt(cursor.getString(cursor.getColumnIndex(RedditEntryApi.Entry.CREATED))));
                     postModel.setUrl(cursor.getString(cursor.getColumnIndex(RedditEntryApi.Entry.URL)));
+                    postModel.setThumbnail(cursor.getString(cursor.getColumnIndex(RedditEntryApi.Entry.THUMBNAIL)));
                     byte[] image = cursor.getBlob(cursor.getColumnIndex(RedditEntryApi.Entry.ICON));
                     if (image != null) {
                         postModel.setIcon(image);

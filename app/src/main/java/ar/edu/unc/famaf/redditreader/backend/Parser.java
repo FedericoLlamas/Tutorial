@@ -116,6 +116,9 @@ public class Parser {
                     post.setAuthor(reader.nextString());
                     break;
                 case "thumbnail":
+                    post.setThumbnail(reader.nextString());
+                    break;
+                case "url":
                     post.setUrl(reader.nextString());
                     break;
                 case "num_comments":

@@ -6,20 +6,32 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 
 import ar.edu.unc.famaf.redditreader.backend.ReeditDBHelper;
 import ar.edu.unc.famaf.redditreader.backend.RedditEntryApi;
 
-public class PostModel {
+public class PostModel implements Serializable {
     private Integer id;
     private String mTitle;/*titulo*/
     private String mSubreddit;/*csubreddit*/
     private int mCreated;/*creado fecha*/
     private String mAuthor;
     private byte[] icon= new byte[0];
+
+    private String thumbnail;
+
     private String url;
     private int comments;
     private boolean download=false;
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 
     public boolean isDownload() {
         return download;
@@ -126,6 +138,7 @@ public class PostModel {
         values.put(RedditEntryApi.Entry.CREATED, mCreated);
         values.put(RedditEntryApi.Entry.TITLE, mTitle);
         values.put(RedditEntryApi.Entry.COMMENTS,comments);
+        values.put(RedditEntryApi.Entry.THUMBNAIL, thumbnail);
         values.put(RedditEntryApi.Entry.URL, url);
         if (this.icon.length >0 ){
             values.put(RedditEntryApi.Entry.ICON, icon);
