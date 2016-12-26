@@ -1,7 +1,9 @@
 package ar.edu.unc.famaf.redditreader.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -14,9 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -111,6 +115,30 @@ public class PostAdapter extends ArrayAdapter {
             String thumbnail = model.getThumbnail();
             downloadImageTask.execute(thumbnail);
         }
+
+        ImageButton bv_up = (ImageButton) row.findViewById(R.id.row_up);
+        ImageButton bv_down = (ImageButton) row.findViewById(R.id.row_down);
+
+        if (NewsActivity.login){
+            bv_up.setVisibility(View.VISIBLE);
+            bv_down.setVisibility(View.VISIBLE);
+
+            bv_up.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Toast.makeText(getContext(), "Logueado, votar POSITIVO!", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            bv_down.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Toast.makeText(getContext(), "Logueado, votar NEGATIVO!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else{
+            bv_up.setVisibility(View.GONE);
+            bv_down.setVisibility(View.GONE);
+        }
+
         return row;
     }
 
@@ -134,6 +162,8 @@ public class PostAdapter extends ArrayAdapter {
         TextView comments;
         ProgressBar progressBar;
     }
+
+
 
     @Override
     public boolean isEmpty() {

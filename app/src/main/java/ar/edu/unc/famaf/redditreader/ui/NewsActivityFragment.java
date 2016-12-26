@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -54,7 +56,7 @@ public class NewsActivityFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View lvView =  inflater.inflate(R.layout.fragment_news, container, false);
+        final View lvView =  inflater.inflate(R.layout.fragment_news, container, false);
         final List<PostModel> listPost= new ArrayList<>();
         final boolean[] mBusy = new boolean[1];
         final ListView lv = (ListView) lvView.findViewById(R.id.list_view_id);
@@ -62,6 +64,7 @@ public class NewsActivityFragment extends Fragment{
         Backend.getInstance().getTopPosts(0, getContext(), new TopPostIterator() {
             @Override
             public void nextPosts(List<PostModel> list, ReeditDBHelper db) {
+
                 adapter = new PostAdapter(getActivity(), R.layout.row_layout, listPost, db, mBusy[0]);
                 lv.setAdapter(adapter);
 
@@ -74,6 +77,7 @@ public class NewsActivityFragment extends Fragment{
                         }
                     }
                 });
+
                 listPost.addAll(list);
             }
         });
@@ -91,6 +95,14 @@ public class NewsActivityFragment extends Fragment{
                 return true;
             }
         });
+
+        /*ImageButton addcomment = (ImageButton) lvView.findViewById(R.id.row_up);
+        addcomment.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "hola", Toast.LENGTH_SHORT).show();
+            }
+        });*/
         return lvView;
+
     }
 }

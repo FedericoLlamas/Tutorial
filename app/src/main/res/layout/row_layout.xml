@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:padding="@dimen/activity_horizontal_margin"
     android:descendantFocusability="blocksDescendants"
@@ -7,9 +8,8 @@
 
 
     <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_width="wrap_content"
+        android:layout_height="171dp">
 
         <ProgressBar
             style="?android:attr/progressBarStyle"
@@ -78,16 +78,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" Comments"
-            android:id="@+id/comments_id"
-            android:textSize="16sp"
-            android:layout_below="@+id/title_id"
-            android:layout_alignRight="@+id/title_id"
-            android:layout_alignEnd="@+id/title_id" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/date"
             android:id="@+id/date_id"
@@ -113,6 +103,46 @@
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/image_id"
             android:layout_toEndOf="@+id/image_id" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" Comments"
+            android:id="@+id/comments_id"
+            android:textSize="16sp"
+            android:layout_alignBaseline="@+id/com_num_id"
+            android:layout_alignBottom="@+id/com_num_id"
+            android:layout_toRightOf="@+id/com_num_id"
+            android:layout_toEndOf="@+id/com_num_id" />
+
+        <ImageButton
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            app:srcCompat="@android:drawable/arrow_up_float"
+            android:layout_below="@+id/img_comm_id"
+            android:layout_alignLeft="@+id/img_comm_id"
+            android:layout_alignStart="@+id/img_comm_id"
+            android:id="@+id/row_up"
+            android:layout_alignRight="@+id/img_comm_id"
+            android:layout_alignEnd="@+id/img_comm_id" />
+
+        <ImageButton
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            app:srcCompat="@android:drawable/arrow_down_float"
+            android:id="@+id/row_down"
+            android:layout_below="@+id/img_comm_id"
+            android:layout_toRightOf="@+id/com_num_id"
+            android:layout_toEndOf="@+id/com_num_id" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/row_up"
+            android:layout_toRightOf="@+id/row_up"
+            android:layout_toEndOf="@+id/row_up"
+            android:id="@+id/favorite_id" />
 
 
     </RelativeLayout>

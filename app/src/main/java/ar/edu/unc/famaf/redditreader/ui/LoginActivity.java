@@ -3,6 +3,8 @@ package ar.edu.unc.famaf.redditreader.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -211,11 +213,14 @@ public class LoginActivity extends AppCompatActivity  {
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-
+            Intent returnIntent = new Intent();
             if (success) {
+                returnIntent.putExtra("conected",true);
+                setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
+                returnIntent.putExtra("conected",false);
                 mPasswordView.requestFocus();
             }
         }
