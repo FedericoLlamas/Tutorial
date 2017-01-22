@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Layout;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,10 @@ import ar.edu.unc.famaf.redditreader.R;
 import ar.edu.unc.famaf.redditreader.backend.ReeditDBHelper;
 
 import ar.edu.unc.famaf.redditreader.model.PostModel;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by dvr on 07/10/16.
@@ -126,12 +131,36 @@ public class PostAdapter extends ArrayAdapter {
             bv_up.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Toast.makeText(getContext(), "Logueado, votar POSITIVO!", Toast.LENGTH_SHORT).show();
+
+                    OkHttpClient client = new OkHttpClient();
+                    String name = "t3_5pb672";
+                    String authString = NewsActivity.CLIENT_ID + ":";
+                    String encodedAuthString = Base64.encodeToString(authString.getBytes(),
+                            Base64.NO_WRAP);
+                    Request request = new Request.Builder()
+                            .addHeader("User-Agent", "Reddit Reader")
+                            .addHeader("Authorization", "bearer" + encodedAuthString)
+                            .url("https://oauth.reddit.com/api/vote")
+                            .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),"id="+name+"&dir=1"))
+                            .build();
                 }
             });
 
             bv_down.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Toast.makeText(getContext(), "Logueado, votar NEGATIVO!", Toast.LENGTH_SHORT).show();
+
+                    OkHttpClient client = new OkHttpClient();
+                    String name = "t3_5pb672";
+                    String authString = NewsActivity.CLIENT_ID + ":";
+                    String encodedAuthString = Base64.encodeToString(authString.getBytes(),
+                            Base64.NO_WRAP);
+                    Request request = new Request.Builder()
+                            .addHeader("User-Agent", "Reddit Reader")
+                            .addHeader("Authorization", "bearer" + encodedAuthString)
+                            .url("https://oauth.reddit.com/api/vote")
+                            .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),"id="+name+"&dir=-1"))
+                            .build();
                 }
             });
         }else{

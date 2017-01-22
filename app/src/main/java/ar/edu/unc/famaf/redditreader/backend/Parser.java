@@ -1,8 +1,6 @@
 package ar.edu.unc.famaf.redditreader.backend;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+
 import android.util.JsonReader;
 import android.util.JsonToken;
 
@@ -117,5 +115,7 @@ public class Parser {
 
         return post;
     }
+
+
 
 }

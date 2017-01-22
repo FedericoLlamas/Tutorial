@@ -81,7 +81,6 @@ public class NewsActivityFragment extends Fragment{
                 listPost.addAll(list);
             }
         });
-
         lv.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
@@ -92,16 +91,11 @@ public class NewsActivityFragment extends Fragment{
                         adapter.notifyDataSetChanged();
                     }
                 });
+
                 return true;
             }
         });
 
-        /*ImageButton addcomment = (ImageButton) lvView.findViewById(R.id.row_up);
-        addcomment.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "hola", Toast.LENGTH_SHORT).show();
-            }
-        });*/
         return lvView;
 
     }

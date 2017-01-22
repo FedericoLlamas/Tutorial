@@ -36,7 +36,7 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
                     "&response_type=code&state=%s&redirect_uri=%s&" +
                     "duration=permanent&scope=identity";
 
-    private static final String CLIENT_ID = "NE68WwBPVyjnTw";
+    public static final String CLIENT_ID = "NE68WwBPVyjnTw";
 
     private static final String REDIRECT_URI =
             "http://www.example.com/my_redirect";
@@ -124,12 +124,14 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
                 if(state.equals(STATE)) {
                     String code = uri.getQueryParameter("code");
                     getAccessToken(code);
+
                 }
             }
         }
     }
 
     private void getAccessToken(String code) {
+
         OkHttpClient client = new OkHttpClient();
         String authString = CLIENT_ID + ":";
         String encodedAuthString = Base64.encodeToString(authString.getBytes(),
@@ -142,6 +144,7 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
                         "grant_type=authorization_code&code=" + code +
                                 "&redirect_uri=" + REDIRECT_URI))
                 .build();
+
         client.newCall(request).enqueue(new Callback() {
 
             @Override
