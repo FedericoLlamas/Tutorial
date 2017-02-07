@@ -3,6 +3,7 @@ package ar.edu.unc.famaf.redditreader.backend;
 
 import android.os.AsyncTask;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -13,7 +14,7 @@ import ar.edu.unc.famaf.redditreader.model.Listing;
  * Created by dvr on 20/10/16.
  */
 
-public class GetTopPostsTask extends AsyncTask<String, Integer, Listing> {
+public class GetTopPostsTask extends AsyncTask<String, Integer,Listing> {
     private String after;
     private int offset;
 
@@ -30,21 +31,26 @@ public class GetTopPostsTask extends AsyncTask<String, Integer, Listing> {
         }else {
             url = params[0];
         }
-        HttpURLConnection connection;
+        System.out.println("URL...: "+url);
+        HttpURLConnection hcon;
         try {
-            connection=(HttpURLConnection)new URL(url).openConnection();
-            connection.setReadTimeout(30000);
-            connection.setRequestMethod("GET");
+            hcon=(HttpURLConnection)new URL(url).openConnection();
+            //hcon.setReadTimeout(30000); // Timeout at 30 seconds
+            //hcon.setRequestProperty("User-Agent", "Alien V1.0");
+            hcon.setRequestMethod("GET");
             Parser list = new Parser();
-
-            return list.readJsonStream(connection.getInputStream());
-
+            InputStream input=hcon.getInputStream();
+            if (input!= null) {
+                return list.readJsonStream(input);
+            }
         } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return new Listing();
 
     }
 

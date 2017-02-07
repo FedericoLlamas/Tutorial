@@ -1,97 +1,253 @@
+<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/news_activity_fragment_detail_id"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="ar.edu.unc.famaf.redditreader.ui.NewsDetailActivityFragment">
+&lt;!&ndash;
+    tools:showIn="@layout/activity_news_detail"
+&ndash;&gt;
+
+    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;
+    <TextView
+        android:id="@+id/text_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_blank_fragment" />
+
+</FrameLayout>-->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/fragment_news_detail_activity_id"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context="ar.edu.unc.famaf.redditreader.ui.NewsDetailActivityFragment">
+    android:id="@+id/news_activity_fragment_detail_id"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#212121"
+    tools:context="ar.edu.unc.famaf.redditreader.ui.NewsDetailActivityFragment">
 
     <TextView
-        android:text="titulo"
+        android:text="TextView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="17dp"
-        android:id="@+id/detail_title_id"
-        android:textSize="30sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/textView5"
+        android:layout_alignBottom="@+id/editText6"
+        android:layout_toRightOf="@+id/editText6"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/editText6"
+        android:textColor="#FFFFFF"
+        android:textStyle="normal|italic" />
 
     <TextView
-        android:text="Author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/detail_author_view"
-        android:layout_below="@+id/detail_title_id"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="13dp" />
-
-    <ImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:id="@+id/detail_image_view"
-        android:layout_below="@+id/detail_author_view"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:text="Comments: "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/detail_image_view"
+        android:text="Autor:"
+        android:ems="10"
+        android:layout_below="@+id/editText6"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="21dp"
-        android:layout_marginStart="21dp" />
+        android:id="@+id/editText7"
+        android:layout_toLeftOf="@+id/textView5"
+        android:layout_toStartOf="@+id/textView5"
+        android:textColor="#FFFFFF"
+        android:textStyle="normal|bold|italic" />
 
     <TextView
-        android:text="0"
+        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/detail_comments_id"
-        android:layout_below="@+id/detail_image_view"
-        android:layout_toRightOf="@+id/textView2"
-        android:layout_toEndOf="@+id/textView2" />
+        android:layout_alignBottom="@+id/editText7"
+        android:id="@+id/textView6"
+        android:layout_below="@+id/textView5"
+        android:layout_toRightOf="@+id/editText6"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="#FFFFFF"
+        android:textStyle="normal|italic" />
 
     <TextView
-        android:text="URL: "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignStart="@+id/textView2"
-        android:id="@+id/textView4" />
+        android:text="Subreddit:"
+        android:ems="10"
+        android:layout_below="@+id/editText7"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/editText8"
+        android:layout_toLeftOf="@+id/textView6"
+        android:layout_toStartOf="@+id/textView6"
+        android:textColor="#FFFFFF"
+        android:textStyle="normal|bold|italic" />
 
     <TextView
-        android:text="Path"
+        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/detail_url_id"
-        android:layout_alignBaseline="@+id/textView4"
-        android:layout_alignBottom="@+id/textView4"
+        android:layout_alignBottom="@+id/editText8"
+        android:id="@+id/textView7"
+        android:layout_below="@+id/textView6"
+        android:layout_toRightOf="@+id/editText7"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="#FFFFFF"
+        android:textStyle="normal|italic" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:layout_below="@+id/editText"
+        android:layout_toRightOf="@+id/imageView4"
+        android:layout_toEndOf="@+id/imageView4"
+        android:layout_above="@+id/textView5"
+        android:background="#BBDEFB"
+        android:textColor="#212121"
+        android:textStyle="normal|bold|italic" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:id="@+id/imageView4"
+        android:layout_above="@+id/textView5"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@id/textView"
+        android:layout_marginRight="2dp"
+        android:cropToPadding="true"
+        android:layout_toStartOf="@+id/textView5"
+        android:layout_below="@+id/editText" />
+    <!--<ImageView-->
+    <!--android:layout_width="70dp"-->
+    <!--android:layout_height="70dp"-->
+    <!--app:srcCompat="@mipmap/ic_launcher"-->
+    <!--android:id="@+id/imageView"-->
+    <!--android:layout_below="@+id/author"-->
+    <!--android:maxWidth="80dp"-->
+    <!--android:maxHeight="80dp"-->
+
+    <!--android:cropToPadding="true"-->
+
+    <!--android:layout_marginBottom="1dp"-->
+    <!--/>-->
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:text="Fecha:"
+        android:ems="10"
+        android:id="@+id/editText6"
+        android:layout_width="100dp"
+        android:layout_marginTop="119dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="#FFFFFF"
+        android:textStyle="normal|bold|italic" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Titulo"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/imageView4"
+        android:textColor="#FFFFFF"
+        android:textStyle="normal|bold|italic"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="center" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/arrow_down_float"
+        android:id="@+id/downDetail"
+        android:layout_alignTop="@+id/upDetail"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="64dp"
+        android:layout_marginEnd="64dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:textColor="@android:color/holo_green_dark"
+        android:textIsSelectable="true"
+        android:textStyle="normal|italic"
+        android:layout_alignBaseline="@+id/editText2"
+        android:layout_alignBottom="@+id/editText2"
+        android:layout_toRightOf="@+id/editText8"
+        android:layout_toEndOf="@+id/editText8"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp" />
+
+    <TextView
+        android:text="Score:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        android:textColor="#FFFFFF"
+        android:ems="10"
+        android:layout_below="@+id/editText8"
+        android:layout_toLeftOf="@+id/textView7"
+        android:layout_toStartOf="@+id/textView7" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scoredetail"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/textView7"
         android:layout_toRightOf="@+id/textView4"
         android:layout_toEndOf="@+id/textView4" />
 
     <TextView
-        android:text="Subreddit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/detail_author_view"
-        android:layout_toRightOf="@+id/detail_title_id"
-        android:layout_toEndOf="@+id/detail_title_id"
-        android:layout_marginLeft="22dp"
-        android:layout_marginStart="22dp"
-        android:id="@+id/detail_subrredit_id" />
+        android:text="URL:"
+        android:ems="10"
+        android:id="@+id/editText2"
+        android:autoLink="web"
+        android:textColor="#FFFFFF"
+        android:textStyle="normal|bold|italic"
+        android:layout_below="@+id/upDetail"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-    <TextView
-        android:text="Date"
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/detail_author_view"
-        android:layout_toLeftOf="@+id/detail_comments_id"
-        android:layout_toStartOf="@+id/detail_comments_id"
-        android:id="@+id/detail_date_id" />
+        app:srcCompat="@android:drawable/arrow_up_float"
+        android:id="@+id/upDetail"
+        android:layout_below="@+id/textView7"
+        android:layout_toLeftOf="@+id/downDetail"
+        android:layout_toStartOf="@+id/downDetail"
+        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp" />
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+    <!--android:text="link_page"-->
+    <!--android:id="@+id/page_link"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:linksClickable="false" />-->
+
 
 </RelativeLayout>
-
-

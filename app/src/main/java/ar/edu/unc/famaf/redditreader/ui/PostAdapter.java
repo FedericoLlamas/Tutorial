@@ -1,21 +1,18 @@
 package ar.edu.unc.famaf.redditreader.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.Layout;
-import android.util.Base64;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,8 +20,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -35,238 +35,223 @@ import java.util.Date;
 import java.util.List;
 
 import ar.edu.unc.famaf.redditreader.R;
-import ar.edu.unc.famaf.redditreader.backend.ReeditDBHelper;
+import ar.edu.unc.famaf.redditreader.backend.DBAdapter;
+
 
 import ar.edu.unc.famaf.redditreader.model.PostModel;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
-/**
- * Created by dvr on 07/10/16.
- */
 
 public class PostAdapter extends ArrayAdapter {
     private Context context;
-    private int rsId;
-    private List<PostModel> ListPostModel;
-    private ReeditDBHelper db;
+    private int layoutResourceId;
+    private List<PostModel> mListPostModel;
+    private DBAdapter db;
     private boolean mbusy;
 
-    public PostAdapter(Context context, int resource, List<PostModel> list, ReeditDBHelper db, boolean mBusy) {
+    public PostAdapter(Context context, int resource, List<PostModel> list, DBAdapter db, boolean mBusy) {
         super(context, resource, list);
-        ListPostModel = list;
+        mListPostModel = list;
         this.context = context;
-        this.rsId = resource;
+        this.layoutResourceId = resource;
         this.db = db;
         this.mbusy=mBusy;
 
     }
 
-    @Override
-    public int getCount() {
-        return ListPostModel.size();
-    }
-
     @Nullable
     @Override
     public PostModel getItem(int position) {
-        return ListPostModel.get(position);
-    }
-
-    public int getPosition(PostModel item) {
-        return ListPostModel.indexOf(item);
+        return mListPostModel.get(position);
     }
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View row = convertView;
+        int original_score =0;
+        int clicks = 0;
         final PostModelHolder holder;
-        if (row == null) {
+        final Bitmap bitmapdefault = BitmapFactory.decodeResource(context.getResources(), R.drawable.error);
+
+        if (row == null || !(row.getTag() instanceof PostModelHolder)) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            row = inflater.inflate(rsId, parent, false);
 
+            row = inflater.inflate(layoutResourceId, parent, false);
             holder = new PostModelHolder();
-            holder.author = (TextView) row.findViewById(R.id.author_id);
-            holder.created = (TextView) row.findViewById(R.id.date_id);
-            holder.subReddit = (TextView) row.findViewById(R.id.sub_reddit_id);
-            holder.title = (TextView) row.findViewById(R.id.title_id);
-            holder.icon = (ImageView) row.findViewById(R.id.image_id);
-            holder.comments = (TextView) row.findViewById(R.id.comments_id);
-            holder.progressBar = (ProgressBar) row.findViewById(R.id.progress_bar);
+            holder.mAuthor = (TextView) row.findViewById(R.id.author);
+            holder.mCreated = (TextView) row.findViewById(R.id.created);
+            holder.mSubreddit = (TextView) row.findViewById(R.id.subreddit);
+            holder.mTitle = (TextView) row.findViewById(R.id.title);
+            holder.icon = (ImageView) row.findViewById(R.id.imageView);
+            holder.comments = (TextView) row.findViewById(R.id.comment);
+            holder.progressBar = (ProgressBar) row.findViewById(R.id.progressBar);
+            holder.score = (TextView) row.findViewById(R.id.scoredetail);
+            holder.up = (ImageButton) row.findViewById(R.id.up);
+            holder.down = (ImageButton) row.findViewById(R.id.down);
             row.setTag(holder);
-
-        } else {
+        }else{
             holder = (PostModelHolder) row.getTag();
         }
-        final PostModel model = ListPostModel.get(position);
 
-        holder.title.setText(model.getTitle());
-        holder.subReddit.setText(model.getSubreddit());
-        holder.created.setText(setTime(String.valueOf(model.getCreated())));
-        holder.author.setText(model.getAuthor());
+        final PostModel model = getItem(position);
+        original_score= model.getScore();
+        holder.mTitle.setText(model.getTitle());
+        holder.mSubreddit.setText(model.getSubreddit());
+        holder.mCreated.setText(setTime(model.getCreated()));
+        holder.mAuthor.setText(model.getAuthor());
         holder.comments.setText(String.valueOf(model.getComments()));
+        holder.score.setText(String.valueOf(model.getScore()));
+        holder.down.setBackgroundColor(Color.TRANSPARENT);
+        holder.up.setBackgroundColor(Color.TRANSPARENT);
+        holder.position= position;
+        //parte nueva
+        if(NewsActivity.LOGGIN && model.getClickup() == 1){
+            holder.up.setBackgroundColor(Color.DKGRAY);
+            original_score=model.getScore()-1;
+        }
+        if(NewsActivity.LOGGIN && model.getClickdown() == 1){
+            holder.down.setBackgroundColor(Color.DKGRAY);
+            original_score=model.getScore()+1;
+        }
+        final Buttons button = new Buttons(model,holder, db, context, clicks, original_score);
+        holder.up.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                if(NewsActivity.LOGGIN && !NewsActivity.ACTIVE_USER){
+                    //USUARIO NO ACTIVO, SIN AUTORIZACION
+                    Toast.makeText(context, "Unauthorized. Loggin again!", Toast.LENGTH_SHORT).show();
+                    System.out.println("USUARIO NO ACTIVO, SIN AUTORIZACION");
+                    ((Activity) context).finish();
+                }else{
+                    button.Bcontrol("1");
+                }
+
+            }
+        });
+        holder.down.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                if(NewsActivity.LOGGIN && !NewsActivity.ACTIVE_USER){
+                    //USUARIO NO ACTIVO, SIN AUTORIZACION
+                    Toast.makeText(context, "Unauthorized. Loggin again!", Toast.LENGTH_SHORT).show();
+                    System.out.println("USUARIO NO ACTIVO, SIN AUTORIZACION");
+                    ((Activity) context).finish();
+                }else{
+                    button.Bcontrol("-1");
+                }
+
+            }
+        });
+
+
+        //fin parte nueva
+
         if (model.getIcon().length > 0) {
-            holder.icon.setImageBitmap(model.getImage(model.getIcon()));
+            holder.icon.setImageBitmap(getImage(model.getIcon()));
             holder.progressBar.setVisibility(View.GONE);
             return row;
-
         }
+        //caso contrario descargamos imagen si existe url
         if (model.getThumbnail() != null && !mbusy && !model.isDownload()) {
-            DownloadImageTask downloadImageTask = new DownloadImageTask(holder, model);
-            String thumbnail = model.getThumbnail();
-            downloadImageTask.execute(thumbnail);
+            try {
+                URL urlArray = new URL(model.getThumbnail());
+                //Descargando imagen
+                new DownloadImageTask(model){
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        holder.progressBar.setVisibility(View.VISIBLE);
+                        model.setDownload(true);
+                    }
+                    @Override
+                    protected void onPostExecute(Bitmap result) {
+                        super.onPostExecute(result);
+                        if(holder.position==position ){
+                            if(result== null){
+                                result= bitmapdefault;
+                            }
+                            holder.icon.setImageBitmap(result);
+                            holder.progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                }.execute(urlArray);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                holder.icon.setImageBitmap(bitmapdefault);
+                holder.progressBar.setVisibility(View.GONE);
+            }
+
+        } else if (model.getThumbnail()==null){
+            holder.icon.setImageBitmap(bitmapdefault);
+            holder.progressBar.setVisibility(View.GONE);
         }
-
-        ImageButton bv_up = (ImageButton) row.findViewById(R.id.row_up);
-        ImageButton bv_down = (ImageButton) row.findViewById(R.id.row_down);
-
-        if (NewsActivity.login){
-            bv_up.setVisibility(View.VISIBLE);
-            bv_down.setVisibility(View.VISIBLE);
-
-            bv_up.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Toast.makeText(getContext(), "Logueado, votar POSITIVO!", Toast.LENGTH_SHORT).show();
-
-                    OkHttpClient client = new OkHttpClient();
-                    String name = "t3_5pb672";
-                    String authString = NewsActivity.CLIENT_ID + ":";
-                    String encodedAuthString = Base64.encodeToString(authString.getBytes(),
-                            Base64.NO_WRAP);
-                    Request request = new Request.Builder()
-                            .addHeader("User-Agent", "Reddit Reader")
-                            .addHeader("Authorization", "bearer" + encodedAuthString)
-                            .url("https://oauth.reddit.com/api/vote")
-                            .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),"id="+name+"&dir=1"))
-                            .build();
-                }
-            });
-
-            bv_down.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Toast.makeText(getContext(), "Logueado, votar NEGATIVO!", Toast.LENGTH_SHORT).show();
-
-                    OkHttpClient client = new OkHttpClient();
-                    String name = "t3_5pb672";
-                    String authString = NewsActivity.CLIENT_ID + ":";
-                    String encodedAuthString = Base64.encodeToString(authString.getBytes(),
-                            Base64.NO_WRAP);
-                    Request request = new Request.Builder()
-                            .addHeader("User-Agent", "Reddit Reader")
-                            .addHeader("Authorization", "bearer" + encodedAuthString)
-                            .url("https://oauth.reddit.com/api/vote")
-                            .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),"id="+name+"&dir=-1"))
-                            .build();
-                }
-            });
-        }else{
-            bv_up.setVisibility(View.GONE);
-            bv_down.setVisibility(View.GONE);
-        }
-
         return row;
     }
 
-
-    private String setTime(String time) {
-        String timestamp = String.valueOf(time);
-        Date createdOn = new Date(Long.parseLong(timestamp));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = sdf.format(createdOn);
-
-        return String.valueOf(formattedDate);
-
-    }
-
-    private class PostModelHolder {
-        TextView title;
-        TextView subReddit;
-        TextView created;
-        TextView author;
-        ImageView icon;
-        TextView comments;
-        ProgressBar progressBar;
-    }
-
-
-
-    @Override
-    public boolean isEmpty() {
-        return ListPostModel.isEmpty();
-    }
-
-
-    private class DownloadImageTask extends AsyncTask<String, Integer, Bitmap> {
-        PostModelHolder holder = null;
+    private class DownloadImageTask extends AsyncTask<URL, Integer, Bitmap> {
         PostModel model;
 
-
-        public DownloadImageTask(PostModelHolder holder, PostModel model) {
-            this.holder = holder;
+        private DownloadImageTask(PostModel model) {
             this.model = model;
-
         }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            holder.progressBar.setVisibility(View.VISIBLE);
-            model.setDownload(true);
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String url = urls[0];
-            System.out.println(url);
+        protected Bitmap doInBackground(URL... urls) {
+            URL url = urls[0];
             Bitmap bitmap = null;
-            bitmap = downloadBitmap(url);
-            byte[] image = model.getBytes(bitmap);
-            model.setIcon(image);
-            db.updateImage(model);
+            try {
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                InputStream is = connection.getInputStream();
+                bitmap = BitmapFactory.decodeStream(is, null, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(bitmap!=null){
+                model.setIcon(getBytes(bitmap));
+                db.updateimage(model);
+            }
             return bitmap;
         }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if (result != null) {
-                holder.icon.setImageBitmap(result);
-            }
-            holder.progressBar.setVisibility(View.GONE);
-        }
     }
-
-    private Bitmap downloadBitmap(String url) {
-        HttpURLConnection urlConnection = null;
-        final String DEFAULT_URL_REDDIT_ICON = "http://cdn.revistagq.com/uploads/images/thumbs/201525/reddit_5253_645x485.png";
-
+    //Funciones auxiliares
+    private static byte[] getBytes(Bitmap bitmap) {
+        byte[] image = new byte[0];
         try {
-            if (!URLUtil.isValidUrl(url)){
-                // Default thumbnail
-                url = DEFAULT_URL_REDDIT_ICON;
-            }
-            URL uri = new URL(url);
-            urlConnection = (HttpURLConnection) uri.openConnection();
-            int statusCode = urlConnection.getResponseCode();
-            if (statusCode != HttpURLConnection.HTTP_OK) {
-                return null;
-            }
-
-            InputStream inputStream = urlConnection.getInputStream();
-            if (inputStream != null) {
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                return bitmap;
-            }
-        } catch (Exception e) {
-            assert urlConnection != null;
-            urlConnection.disconnect();
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
+            image = stream.toByteArray();
+        }catch (OutOfMemoryError e){
+            e.printStackTrace();
         }
-        return null;
+        return image;
     }
+
+    private static Bitmap getImage(byte[] image){
+        Bitmap b=null;
+        try{
+            b=BitmapFactory.decodeByteArray(image, 0, image.length);
+        }catch (OutOfMemoryError e){
+            e.printStackTrace();
+        }
+        return b;
+    }
+    private String setTime(long time) {
+        int one_hr=1000*60*60;
+        Date now =new Date();
+        Date before = new Date(time);
+        long diff = now.getTime()- before.getTime();
+        long hs= diff/one_hr;
+        SimpleDateFormat sdf = new SimpleDateFormat("K");
+        String formatt = sdf.format(new Date(hs));
+        return formatt + " h";
+    }
+
 }
+
+

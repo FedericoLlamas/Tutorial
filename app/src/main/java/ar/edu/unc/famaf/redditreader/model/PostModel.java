@@ -8,22 +8,64 @@ import android.graphics.BitmapFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
-import ar.edu.unc.famaf.redditreader.backend.ReeditDBHelper;
-import ar.edu.unc.famaf.redditreader.backend.RedditEntryApi;
+import ar.edu.unc.famaf.redditreader.backend.RedditDb;
 
 public class PostModel implements Serializable {
     private Integer id;
     private String mTitle;/*titulo*/
     private String mSubreddit;/*csubreddit*/
-    private int mCreated;/*creado fecha*/
+    private long mCreated;/*creado fecha*/
     private String mAuthor;
     private byte[] icon= new byte[0];
-
     private String thumbnail;
-
     private String url;
     private int comments;
     private boolean download=false;
+    private int score;
+    private  String name;
+    private int clickup=0;
+    private int clickdown=0;
+
+    public int getClickup() {
+        return clickup;
+    }
+
+    public void setClickup(int click) {
+        this.clickup = click;
+    }
+
+    public int getClickdown() {
+        return clickdown;
+    }
+
+    public void setClickdown(int click) {
+        this.clickdown = click;
+    }
+    //    private  String vote="none";
+//
+//    public String getVote() {
+//        return vote;
+//    }
+//
+//    public void setVote(String vote) {
+//        this.vote = vote;
+//    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 
     public String getThumbnail() {
         return thumbnail;
@@ -68,8 +110,9 @@ public class PostModel implements Serializable {
     public byte[] getIcon(){return icon;}
 
     public void setIcon(byte[] icon2){
-        this.icon= new byte[icon2.length];
-        System.arraycopy(icon2, 0, this.icon,0,icon2.length);
+        this.icon=icon2;
+//        this.icon= new byte[icon2.length];
+//        System.arraycopy(icon2, 0, this.icon,0,icon2.length);
     }
 
     public String getTitle() {
@@ -88,11 +131,11 @@ public class PostModel implements Serializable {
         this.mSubreddit = subreddit;
     }
 
-    public int getCreated() {
+    public long getCreated() {
         return mCreated;
     }
 
-    public void setCreated(int created) {
+    public void setCreated(long created) {
         this.mCreated = created;
     }
 
@@ -104,45 +147,26 @@ public class PostModel implements Serializable {
         this.mAuthor = author;
     }
 
-    public static byte[] getBytes(Bitmap bitmap)
-    {
-        byte[] image = new byte[0];
-        try {
-            ByteArrayOutputStream stream=new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG,0, stream);
-            image= stream.toByteArray();
-        }catch (OutOfMemoryError e){
-            e.printStackTrace();
-        }catch ( NullPointerException e){
-            e.printStackTrace();
-        }
-
-        return image;
-    }
-    public static Bitmap getImage(byte[] image){
-        Bitmap b=null;
-        try{
-            b=BitmapFactory.decodeByteArray(image, 0, image.length);
-        }catch (OutOfMemoryError e){
-            e.printStackTrace();
-        }
-        return b;
-    }
 
     public ContentValues toContentValues(){
         ContentValues values= new ContentValues();
         //este valor se setea una vez que se inserta en la base de datos
         //values.put(RedditDb.RedditEntry.ID, id);
-        values.put(RedditEntryApi.Entry.AUTHOR, mAuthor);
-        values.put(RedditEntryApi.Entry.SUBREDDIT, mSubreddit);
-        values.put(RedditEntryApi.Entry.CREATED, mCreated);
-        values.put(RedditEntryApi.Entry.TITLE, mTitle);
-        values.put(RedditEntryApi.Entry.COMMENTS,comments);
-        values.put(RedditEntryApi.Entry.THUMBNAIL, thumbnail);
-        values.put(RedditEntryApi.Entry.URL, url);
+        values.put(RedditDb.RedditEntry.AUTHOR, mAuthor);
+        values.put(RedditDb.RedditEntry.SUBREDDIT, mSubreddit);
+        values.put(RedditDb.RedditEntry.CREATED, mCreated);
+        values.put(RedditDb.RedditEntry.TITLE, mTitle);
+        values.put(RedditDb.RedditEntry.COMMENTS,comments);
+        values.put(RedditDb.RedditEntry.SCORE, score);
+        values.put(RedditDb.RedditEntry.URL, url);
+        values.put(RedditDb.RedditEntry.THUMBNAIL, thumbnail);
         if (this.icon.length >0 ){
-            values.put(RedditEntryApi.Entry.ICON, icon);
+            values.put(RedditDb.RedditEntry.ICON, icon);
         }
+        values.put(RedditDb.RedditEntry.NAME,name);
+//        values.put(RedditDb.RedditEntry.CLICKUP,clickup);
+//        values.put(RedditDb.RedditEntry.CLICDOWN, clickdown);
+//        values.put(RedditDb.RedditEntry.VOTE, vote);
         return  values;
     }
 }
