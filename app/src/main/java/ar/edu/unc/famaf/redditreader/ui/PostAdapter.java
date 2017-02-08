@@ -51,13 +51,13 @@ import okhttp3.Response;
 public class PostAdapter extends ArrayAdapter {
     private Context context;
     private int layoutResourceId;
-    private List<PostModel> mListPostModel;
+    private List<PostModel> listPostModel;
     private DBAdapter db;
     private boolean mbusy;
 
     public PostAdapter(Context context, int resource, List<PostModel> list, DBAdapter db, boolean mBusy) {
         super(context, resource, list);
-        mListPostModel = list;
+        listPostModel = list;
         this.context = context;
         this.layoutResourceId = resource;
         this.db = db;
@@ -68,7 +68,7 @@ public class PostAdapter extends ArrayAdapter {
     @Nullable
     @Override
     public PostModel getItem(int position) {
-        return mListPostModel.get(position);
+        return listPostModel.get(position);
     }
 
     @NonNull
@@ -85,10 +85,10 @@ public class PostAdapter extends ArrayAdapter {
 
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new PostModelHolder();
-            holder.mAuthor = (TextView) row.findViewById(R.id.author);
-            holder.mCreated = (TextView) row.findViewById(R.id.created);
-            holder.mSubreddit = (TextView) row.findViewById(R.id.subreddit);
-            holder.mTitle = (TextView) row.findViewById(R.id.title);
+            holder.author = (TextView) row.findViewById(R.id.author);
+            holder.created = (TextView) row.findViewById(R.id.created);
+            holder.subreddit = (TextView) row.findViewById(R.id.subreddit);
+            holder.title = (TextView) row.findViewById(R.id.title);
             holder.icon = (ImageView) row.findViewById(R.id.imageView);
             holder.comments = (TextView) row.findViewById(R.id.comment);
             holder.progressBar = (ProgressBar) row.findViewById(R.id.progressBar);
@@ -102,21 +102,23 @@ public class PostAdapter extends ArrayAdapter {
 
         final PostModel model = getItem(position);
         original_score= model.getScore();
-        holder.mTitle.setText(model.getTitle());
-        holder.mSubreddit.setText(model.getSubreddit());
-        holder.mCreated.setText(setTime(model.getCreated()));
-        holder.mAuthor.setText(model.getAuthor());
+        holder.title.setText(model.getTitle());
+        holder.subreddit.setText(model.getSubreddit());
+        holder.created.setText(setTime(model.getCreated()));
+        holder.author.setText(model.getAuthor());
         holder.comments.setText(String.valueOf(model.getComments()));
         holder.score.setText(String.valueOf(model.getScore()));
         holder.down.setBackgroundColor(Color.TRANSPARENT);
         holder.up.setBackgroundColor(Color.TRANSPARENT);
         holder.position= position;
+
+
         //parte nueva
-        if(NewsActivity.LOGGIN && model.getClickup() == 1){
+        if(NewsActivity.LOGIN && model.getClickup() == 1){
             holder.up.setBackgroundColor(Color.DKGRAY);
             original_score=model.getScore()-1;
         }
-        if(NewsActivity.LOGGIN && model.getClickdown() == 1){
+        if(NewsActivity.LOGIN && model.getClickdown() == 1){
             holder.down.setBackgroundColor(Color.DKGRAY);
             original_score=model.getScore()+1;
         }
@@ -124,7 +126,7 @@ public class PostAdapter extends ArrayAdapter {
         holder.up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                if(NewsActivity.LOGGIN && !NewsActivity.ACTIVE_USER){
+                if(NewsActivity.LOGIN && !NewsActivity.ACTIVE_USER){
                     //USUARIO NO ACTIVO, SIN AUTORIZACION
                     Toast.makeText(context, "Unauthorized. Loggin again!", Toast.LENGTH_SHORT).show();
                     System.out.println("USUARIO NO ACTIVO, SIN AUTORIZACION");
@@ -138,7 +140,7 @@ public class PostAdapter extends ArrayAdapter {
         holder.down.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                if(NewsActivity.LOGGIN && !NewsActivity.ACTIVE_USER){
+                if(NewsActivity.LOGIN && !NewsActivity.ACTIVE_USER){
                     //USUARIO NO ACTIVO, SIN AUTORIZACION
                     Toast.makeText(context, "Unauthorized. Loggin again!", Toast.LENGTH_SHORT).show();
                     System.out.println("USUARIO NO ACTIVO, SIN AUTORIZACION");
@@ -214,7 +216,7 @@ public class PostAdapter extends ArrayAdapter {
             }
             if(bitmap!=null){
                 model.setIcon(getBytes(bitmap));
-                db.updateimage(model);
+                db.updateData(model, "IMAGE");
             }
             return bitmap;
         }

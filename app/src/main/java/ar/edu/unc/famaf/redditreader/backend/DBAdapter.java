@@ -16,17 +16,32 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 public class DBAdapter {
     private DatabaseHelper DBHelper;
-    private SQLiteDatabase db;
-    private  int totalItemsCount;
+    private SQLiteDatabase database;
+    private int count;
+
+    public static final String TABLE_NAME = "postModel";
+    public static final String ID = "id";
+    public static final String AUTHOR = "mAuthor";
+    public static final String TITLE = "mTitle";
+    public static final String SUBREDDIT ="mSubreddit";
+    public static final String COMMENTS = "comments";
+    public static final String SCORE = "score";
+    public static final String CREATED = "mCreated";
+    public static final String URL = "url";
+    public static final String THUMBNAIL ="thumbnail";
+    public static  final String ICON = "icon";
+    public static  final String NAME = "name";
 
     public DBAdapter(Context ctx, int totalItemsCount) {
         this.DBHelper = new DatabaseHelper(ctx);
-        this.totalItemsCount= totalItemsCount;
+        this.count= totalItemsCount;
     }
 
     private class DatabaseHelper extends SQLiteOpenHelper {
         private static final int DATABASE_VERSION = 1;
         private static final String DATABASE_NAME = "reddit.db";
+
+
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -35,22 +50,19 @@ public class DBAdapter {
         @Override
         public void onCreate(SQLiteDatabase db) {
             try {
-                db.execSQL("CREATE TABLE " + RedditDb.RedditEntry.TABLE_NAME + " ("
-                        + RedditDb.RedditEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                        + RedditDb.RedditEntry.AUTHOR + " TEXT,"
-                        + RedditDb.RedditEntry.TITLE + " TEXT,"
-                        + RedditDb.RedditEntry.SUBREDDIT + " TEXT,"
-                        + RedditDb.RedditEntry.COMMENTS + " TEXT,"
-                        + RedditDb.RedditEntry.SCORE + " TEXT,"
-                        + RedditDb.RedditEntry.CREATED + " INTEGER,"
-                        + RedditDb.RedditEntry.URL + " TEXT,"
-                        + RedditDb.RedditEntry.THUMBNAIL + " TEXT,"
-                        + RedditDb.RedditEntry.ICON + " BLOB,"
-                        + RedditDb.RedditEntry.NAME + " TEXT,"
-//                        + RedditDb.RedditEntry.CLICKUP+ " INTEGER,"
-//                        + RedditDb.RedditEntry.CLICDOWN + " INTEGER,"
-
-                        + "UNIQUE (" + RedditDb.RedditEntry.ID + "))");
+                db.execSQL("CREATE TABLE " + TABLE_NAME + " ("
+                        + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        + NAME + " TEXT,"
+                        + AUTHOR + " TEXT,"
+                        + TITLE + " TEXT,"
+                        + SUBREDDIT + " TEXT,"
+                        + COMMENTS + " TEXT,"
+                        + CREATED + " INTEGER,"
+                        + SCORE + " TEXT,"
+                        + THUMBNAIL + " TEXT,"
+                        + URL + " TEXT,"
+                        + ICON + " BLOB,"
+                        + "UNIQUE (" + ID + "))");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -58,93 +70,79 @@ public class DBAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS " + RedditDb.RedditEntry.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
             onCreate(db);
         }
     }
 
-    public DBAdapter open() throws SQLException {
-        db = DBHelper.getWritableDatabase();
-        return this;
+    public void upgrade(){
+        DBHelper.onUpgrade(database,1,2);
     }
 
     public void close() {
-        //Close any open database object.
         DBHelper.close();
     }
 
-    public void upgrade(){
-        DBHelper.onUpgrade(db,1,2);
+    public DBAdapter Writable() throws SQLException {
+        database = DBHelper.getWritableDatabase();
+        return this;
     }
 
-    public DBAdapter savePostModel(List<PostModel> list) {
-        db = DBHelper.getWritableDatabase();
+    public void updateData(PostModel postModel, String elem){
+        if(!database.isOpen()){
+            Writable();
+        }
+        ContentValues val = new ContentValues();
+        if (elem == "SCORE"){
+            val.put(SCORE, postModel.getScore());
+        }
+        else if(elem == "IMAGE"){
+            val.put(ICON, postModel.getIcon());
+        }
+        else{
+            close();
+        }
+        database.update(TABLE_NAME, val, ID + "=" + postModel.getId(),null);
+        close();
+    }
 
-        for(int i=0; i<list.size(); i++){
-            db.insert(RedditDb.RedditEntry.TABLE_NAME, null,  list.get(i).toContentValues());
-            /*Guardo el id en el postmodel*/
-            Cursor c = db.query(RedditDb.RedditEntry.TABLE_NAME, null, RedditDb.RedditEntry.AUTHOR + " LIKE ?",
-                    new String[]{list.get(i).getAuthor()}, null, null, null);
-            if (c != null){
-                c.moveToFirst();
-                list.get(i).setId(c.getInt(c.getColumnIndex(RedditDb.RedditEntry.ID)));
-                c.close();
+    public DBAdapter savePostModel(List<PostModel> listModel) {
+        database = DBHelper.getWritableDatabase();
+        for(int i=0; i < listModel.size(); i++){
+            database.insert(TABLE_NAME, null,  listModel.get(i).Values());
+            Cursor cursor = database.query(TABLE_NAME, null, AUTHOR + " LIKE ?",
+                    new String[]{listModel.get(i).getAuthor()}, null, null, null);
+            if (cursor != null){
+                cursor.moveToFirst();
+                listModel.get(i).setId(cursor.getInt(cursor.getColumnIndex(ID)));
+                cursor.close();
             }
         }
         return this;
     }
-    public  void updateScore(PostModel postModel){
-        if(!db.isOpen()){open();}
-        ContentValues values = new ContentValues();
-        values.put(RedditDb.RedditEntry.SCORE, postModel.getScore());
-        db.update(RedditDb.RedditEntry.TABLE_NAME, values, RedditDb.RedditEntry.ID + "=" + postModel.getId(),null);
-        close();
-    }
-
-//    public  void updateClicks(PostModel postModel){
-//        if(!db.isOpen()){open();}
-//        ContentValues values = new ContentValues();
-//        values.put(RedditDb.RedditEntry.CLICKUP, postModel.getClickup());
-//        values.put(RedditDb.RedditEntry.CLICDOWN, postModel.getClickdown());
-//        db.update(RedditDb.RedditEntry.TABLE_NAME, values, RedditDb.RedditEntry.ID + "=" + postModel.getId(),null);
-//        close();
-//    }
-
-
-    public  void updateimage(PostModel postModel) {
-        if(!db.isOpen()){open();}
-        ContentValues values = new ContentValues();
-        values.put(RedditDb.RedditEntry.ICON, postModel.getIcon());
-        db.update(RedditDb.RedditEntry.TABLE_NAME, values, RedditDb.RedditEntry.ID + "=" + postModel.getId(),null);
-        close();
-    }
 
     public List<PostModel> getAllDb(){
         List<PostModel> list = new ArrayList<PostModel>();
-        int offset=totalItemsCount;
-        String selectQuery2 = "SELECT  * FROM " + RedditDb.RedditEntry.TABLE_NAME + " LIMIT 5 OFFSET "+ String.valueOf(offset);
+        String query = "SELECT  * FROM " + TABLE_NAME + " LIMIT 5 OFFSET "+ String.valueOf(count);
         try {
-            Cursor cursor = db.rawQuery(selectQuery2, null);
+            Cursor cursor = database.rawQuery(query, null);
             if(cursor.moveToFirst()) {
                 do {
                     PostModel postModel = new PostModel();
-                    postModel.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(RedditDb.RedditEntry.ID))));
-                    postModel.setAuthor(cursor.getString(cursor.getColumnIndex(RedditDb.RedditEntry.AUTHOR)));
-                    postModel.setTitle(cursor.getString(cursor.getColumnIndex(RedditDb.RedditEntry.TITLE)));
-                    postModel.setSubreddit(cursor.getString(cursor.getColumnIndex(RedditDb.RedditEntry.SUBREDDIT)));
-                    postModel.setComments(Integer.parseInt(cursor.getString(cursor.getColumnIndex(RedditDb.RedditEntry.COMMENTS))));
-                    postModel.setScore(Integer.parseInt(cursor.getString(cursor.getColumnIndex(RedditDb.RedditEntry.SCORE))));
-                    postModel.setCreated(cursor.getLong(cursor.getColumnIndex(RedditDb.RedditEntry.CREATED)));
-                    postModel.setUrl(cursor.getString(cursor.getColumnIndex(RedditDb.RedditEntry.URL)));
-                    postModel.setThumbnail(cursor.getString(cursor.getColumnIndex(RedditDb.RedditEntry.THUMBNAIL)));
-                    byte[] image = cursor.getBlob(cursor.getColumnIndex(RedditDb.RedditEntry.ICON));
+                    postModel.setTitle(cursor.getString(cursor.getColumnIndex(TITLE)));
+                    postModel.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(ID))));
+                    postModel.setAuthor(cursor.getString(cursor.getColumnIndex(AUTHOR)));
+                    postModel.setComments(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COMMENTS))));
+                    postModel.setSubreddit(cursor.getString(cursor.getColumnIndex(SUBREDDIT)));
+                    postModel.setCreated(cursor.getLong(cursor.getColumnIndex(CREATED)));
+                    postModel.setScore(Integer.parseInt(cursor.getString(cursor.getColumnIndex(SCORE))));
+                    postModel.setThumbnail(cursor.getString(cursor.getColumnIndex(THUMBNAIL)));
+                    postModel.setUrl(cursor.getString(cursor.getColumnIndex(URL)));
+                    byte[] image = cursor.getBlob(cursor.getColumnIndex(ICON));
                     if (image != null) {
                         postModel.setIcon(image);
                     }
-                    postModel.setName(cursor.getString(cursor.getColumnIndex(RedditDb.RedditEntry.NAME)));
-//                    postModel.setClickup(Integer.parseInt(cursor.getString(cursor.getColumnIndex(RedditDb.RedditEntry.CLICKUP))));
-//                    postModel.setClickdown(Integer.parseInt(cursor.getString(cursor.getColumnIndex(RedditDb.RedditEntry.CLICDOWN))));
-
+                    postModel.setName(cursor.getString(cursor.getColumnIndex(NAME)));
                     list.add(postModel);
                 } while (cursor.moveToNext());
                 cursor.close();

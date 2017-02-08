@@ -10,10 +10,10 @@ import android.widget.TextView;
  */
 
 public class PostModelHolder {
-    TextView mTitle;
-    TextView mSubreddit;
-    TextView mCreated;
-    TextView mAuthor;
+    TextView title;
+    TextView subreddit;
+    TextView created;
+    TextView author;
     ImageView icon;
     TextView comments;
     TextView score;

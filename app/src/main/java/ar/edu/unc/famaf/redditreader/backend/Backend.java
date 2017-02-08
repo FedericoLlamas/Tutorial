@@ -4,8 +4,10 @@ package ar.edu.unc.famaf.redditreader.backend;
 import android.app.AlertDialog;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.widget.Switch;
 
 
@@ -18,24 +20,23 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 public class Backend {
     private static Backend ourInstance = new Backend();
-    private List<PostModel> mListPostModel=null;
-    private boolean loadingDB =false;
+
+    private boolean loadingDB = false;
     private CtrlListing ctrlListing;
-    private boolean waiting=false;
+    private boolean waiting = false;
+    private String NO_INTERNET_MSG = "No hay conexión a intenert.";
 
     public static Backend getInstance() { return ourInstance;    }
 
     private Backend() {
-        mListPostModel = new ArrayList<>();
+        List<PostModel> mListPostModel = new ArrayList<>();
     }
 
-
-    public void getTopPosts(int totalItemsCount, Context context, final TopPostIterator iterator){//debe devolver los primero 5 posts
-        final DBAdapter db= new DBAdapter(context, totalItemsCount).open();
-
+    public void getTopPosts(int countItem, Context context, final TopPostIterator iterator){
+        final DBAdapter db = new DBAdapter(context, countItem).Writable();
         if (!isConnected(context) || loadingDB ){
-            if (isConnected(context) && (totalItemsCount!=0) && (totalItemsCount % 50) == 0 && !waiting) {
-                ctrlListing.control(iterator,totalItemsCount,db);
+            if (isConnected(context) && (countItem!=0) && (countItem % 50) == 0 && !waiting) {
+                ctrlListing.control(iterator,countItem,db);
             }else if(!waiting){
                 new DbLoadTask() {
                     @Override
@@ -45,8 +46,6 @@ public class Backend {
                 }.execute(db);
             }
         }else {
-            //Esta secuencia se ejecuta la primera vez que se llama a getTopPost, luego la carga de los post
-            // los posts se da en el segmento de arriba
             ctrlListing = new CtrlListing();
             ctrlListing.init_process(iterator,db);
         }
@@ -127,12 +126,47 @@ public class Backend {
         NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
 
         if(netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()){
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
-            dialogBuilder.setMessage("No Internet connection!");
-            dialogBuilder.setCancelable(true).setTitle("Alert");
-            dialogBuilder.create().show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage(NO_INTERNET_MSG)
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //do things
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+
             return false;
         }
         return true;
+    }
+
+    public class DbLoadTask extends AsyncTask<DBAdapter,Void,List<PostModel>> {
+        @Override
+        protected List<PostModel> doInBackground(DBAdapter... dbAdapters) {
+            List<PostModel> list=dbAdapters[0].getAllDb();
+            dbAdapters[0].close();
+            return list;
+        }
+
+        @Override
+        protected void onPostExecute(List<PostModel> list1){
+            super.onPostExecute(list1);
+        }
+    }
+
+    public class DbSaveTask extends AsyncTask<DBAdapter,Void,Void> {
+        private List<PostModel> list;
+
+        public DbSaveTask(List<PostModel> lst){
+            list=lst;
+        }
+
+        @Override
+        protected Void doInBackground(DBAdapter... dbAdapters) {
+            dbAdapters[0].savePostModel(list);
+            return null;
+        }
     }
 }

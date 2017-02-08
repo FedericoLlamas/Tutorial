@@ -2,29 +2,26 @@ package ar.edu.unc.famaf.redditreader.model;
 
 
 import android.content.ContentValues;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
-import ar.edu.unc.famaf.redditreader.backend.RedditDb;
+import ar.edu.unc.famaf.redditreader.backend.DBAdapter;
+
 
 public class PostModel implements Serializable {
     private Integer id;
-    private String mTitle;/*titulo*/
-    private String mSubreddit;/*csubreddit*/
-    private long mCreated;/*creado fecha*/
-    private String mAuthor;
-    private byte[] icon= new byte[0];
-    private String thumbnail;
+    private String author;
+    private  String name;
+    private String title;
     private String url;
+    private byte[] icon= new byte[0];
+    private String subreddit;
+    private long created;
+    private String thumbnail;
     private int comments;
     private boolean download=false;
     private int score;
-    private  String name;
-    private int clickup=0;
-    private int clickdown=0;
+    private int clickup = 0;
+    private int clickdown = 0;
 
     public int getClickup() {
         return clickup;
@@ -41,15 +38,22 @@ public class PostModel implements Serializable {
     public void setClickdown(int click) {
         this.clickdown = click;
     }
-    //    private  String vote="none";
-//
-//    public String getVote() {
-//        return vote;
-//    }
-//
-//    public void setVote(String vote) {
-//        this.vote = vote;
-//    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public String getName() {
         return name;
@@ -99,74 +103,50 @@ public class PostModel implements Serializable {
         this.comments = comments;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public byte[] getIcon(){return icon;}
 
     public void setIcon(byte[] icon2){
         this.icon=icon2;
-//        this.icon= new byte[icon2.length];
-//        System.arraycopy(icon2, 0, this.icon,0,icon2.length);
     }
 
     public String getTitle() {
-        return mTitle;
+        return title;
     }
 
     public void setTitle(String title) {
-        this.mTitle = title;
+        this.title = title;
     }
 
     public String getSubreddit() {
-        return mSubreddit;
+        return subreddit;
     }
 
     public void setSubreddit(String subreddit) {
-        this.mSubreddit = subreddit;
+        this.subreddit = subreddit;
     }
 
     public long getCreated() {
-        return mCreated;
+        return created;
     }
 
     public void setCreated(long created) {
-        this.mCreated = created;
+        this.created = created;
     }
 
-    public String getAuthor() {
-        return mAuthor;
-    }
-
-    public void setAuthor(String author) {
-        this.mAuthor = author;
-    }
-
-
-    public ContentValues toContentValues(){
-        ContentValues values= new ContentValues();
-        //este valor se setea una vez que se inserta en la base de datos
-        //values.put(RedditDb.RedditEntry.ID, id);
-        values.put(RedditDb.RedditEntry.AUTHOR, mAuthor);
-        values.put(RedditDb.RedditEntry.SUBREDDIT, mSubreddit);
-        values.put(RedditDb.RedditEntry.CREATED, mCreated);
-        values.put(RedditDb.RedditEntry.TITLE, mTitle);
-        values.put(RedditDb.RedditEntry.COMMENTS,comments);
-        values.put(RedditDb.RedditEntry.SCORE, score);
-        values.put(RedditDb.RedditEntry.URL, url);
-        values.put(RedditDb.RedditEntry.THUMBNAIL, thumbnail);
+    public ContentValues Values(){
+        ContentValues val= new ContentValues();
+        val.put(DBAdapter.AUTHOR, author);
+        val.put(DBAdapter.SUBREDDIT, subreddit);
+        val.put(DBAdapter.TITLE, title);
+        val.put(DBAdapter.CREATED, created);
+        val.put(DBAdapter.THUMBNAIL, thumbnail);
+        val.put(DBAdapter.SCORE, score);
+        val.put(DBAdapter.COMMENTS,comments);
+        val.put(DBAdapter.URL, url);
+        val.put(DBAdapter.NAME,name);
         if (this.icon.length >0 ){
-            values.put(RedditDb.RedditEntry.ICON, icon);
+            val.put(DBAdapter.ICON, icon);
         }
-        values.put(RedditDb.RedditEntry.NAME,name);
-//        values.put(RedditDb.RedditEntry.CLICKUP,clickup);
-//        values.put(RedditDb.RedditEntry.CLICDOWN, clickdown);
-//        values.put(RedditDb.RedditEntry.VOTE, vote);
-        return  values;
+        return  val;
     }
 }

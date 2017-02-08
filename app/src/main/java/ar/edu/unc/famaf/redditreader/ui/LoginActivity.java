@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity  {
                     data = new JSONObject(json);
                     accessToken = data.optString("access_token");
                     refreshToken = data.optString("refresh_token");
-                    NewsActivity.LOGGIN = true;
+                    NewsActivity.LOGIN = true;
                     Log.d(TAG, "Access Token = " + accessToken);
                     Log.d(TAG, "Refresh Token = " + refreshToken);
                     me_detail(accessToken, refreshToken);

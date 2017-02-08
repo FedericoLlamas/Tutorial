@@ -31,10 +31,9 @@ public class Buttons {
         this.score = score;
     }
 
-
     public PostModel Bcontrol(final String dir) {// "1" "-1"
 
-        if (NewsActivity.LOGGIN) {
+        if (NewsActivity.LOGIN) {
             if (dir.equals("1")) {
                 clicks = model.getClickup() + 1;
             } else {
@@ -49,7 +48,7 @@ public class Buttons {
                         if (aBoolean) {
                             model.setScore(score);
                             holder.score.setText(String.valueOf(model.getScore()));
-                            db.updateScore(model);
+                            db.updateData(model, "SCORE");
                             if (dir.equals("1")) {
                                 holder.up.setBackgroundColor(Color.TRANSPARENT);
                                 model.setClickup(0);
@@ -91,7 +90,7 @@ public class Buttons {
                             }
                             Toast.makeText(context, "voting", Toast.LENGTH_SHORT).show();
                             holder.score.setText(String.valueOf(model.getScore()));
-                            db.updateScore(model);
+                            db.updateData(model, "SCORE");
                         } else {
                             if (!NewsActivity.ACTIVE_USER) {
                                 Toast.makeText(context, "Unauthorized. Logout!", Toast.LENGTH_LONG).show();

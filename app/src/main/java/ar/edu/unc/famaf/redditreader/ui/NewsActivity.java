@@ -45,8 +45,9 @@ import okhttp3.Response;
 
 public class NewsActivity extends AppCompatActivity implements OnPostItemSelectedListener{
     static final int REQUEST =0;
-    public  static  boolean LOGGIN = false;
+    public  static  boolean LOGIN = false;
     public  static  boolean ACTIVE_USER = false;
+
     /*Constantes para conexion con loggin de reddit*/
     private static final String TAG = "MyActivity";
     public static final String AUTH_URL =
@@ -86,7 +87,7 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
         outState.putString("CODE", code);
         outState.putString("ACCESSTOKEN", accessToken);
         outState.putString("REFRESHTOKEN", refreshToken);
-        outState.putBoolean("LOGGIN", LOGGIN);
+        outState.putBoolean("LOGGIN", LOGIN);
         outState.putBoolean("ACTIVE_USER", ACTIVE_USER);
         getSupportFragmentManager().putFragment(outState, "fragmento", fragment);
     }
@@ -98,7 +99,7 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
         code  = savedInstanceState.getString("CODE");
         accessToken = savedInstanceState.getString("ACCESSTOKEN");
         refreshToken =savedInstanceState.getString("REFRESHTOKEN");
-        LOGGIN = savedInstanceState.getBoolean("LOGGIN");
+        LOGIN = savedInstanceState.getBoolean("LOGGIN");
         ACTIVE_USER = savedInstanceState.getBoolean("ACTIVE_USER");
         fragment = (NewsActivityFragment) getSupportFragmentManager().getFragment(savedInstanceState, "fragmento");
 
@@ -113,7 +114,7 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
     protected void onResume() {
         super.onResume();
         System.out.println("onResume lauher");
-        if(getIntent()!=null && getIntent().getAction().equals(Intent.ACTION_VIEW) && !LOGGIN) {
+        if(getIntent()!=null && getIntent().getAction().equals(Intent.ACTION_VIEW) && !LOGIN) {
             Uri uri = getIntent().getData();
             if(uri.getQueryParameter("error") != null) {
                 String error = uri.getQueryParameter("error");
@@ -142,13 +143,7 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LOGGIN = false;
-//        if(LOGGIN){
-//            logout();
-//            LOGGIN = false;
-//            Toast.makeText(getApplicationContext(), "logout", Toast.LENGTH_SHORT).show();
-//            invalidateOptionsMenu();
-//        }
+        LOGIN = false;
     }
 
     @Override
@@ -163,13 +158,13 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_sign_in && !LOGGIN) { // llamada a loggin de reddit OAuth2
+        if (id == R.id.action_sign_in && !LOGIN) { // llamada a loggin de reddit OAuth2
             String url = String.format(AUTH_URL, CLIENT_ID, STATE, REDIRECT_URI);
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
         }else if (id == R.id.action_out){ // llamada para revoca token en logout
             logout();
-            LOGGIN =false;
+            LOGIN =false;
             ACTIVE_USER =false;
             Toast.makeText(getApplicationContext(), "logout", Toast.LENGTH_SHORT).show();
             invalidateOptionsMenu();
@@ -180,7 +175,7 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) { // se llama luego de invalidateOptionsMenu();
-        if (LOGGIN){
+        if (LOGIN){
             menu.findItem(R.id.action_sign_in).setVisible(false);
             menu.findItem(R.id.action_out).setVisible(true);
             menu.findItem(R.id.action_out).setTitle(user + " logout");
@@ -209,7 +204,7 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
         int position=0;
         if(resultCode == RESULT_OK){
             //viene post model modificado
-            if(LOGGIN && data!=null) {
+            if(LOGIN && data!=null) {
                 PostModel post = (PostModel) data.getSerializableExtra("post");
                 position = data.getIntExtra("position", position);
                 fragment.changeList(post, position);
@@ -222,46 +217,6 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
         super.onRestart();
     }
 
-//    Funciones auxiliares..........................................................................
-
-//    private void getAccessToken(String code) {
-//        OkHttpClient client = new OkHttpClient();
-//        String authString = CLIENT_ID + ":";
-//        String encodedAuthString = Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
-//        Request request = new Request.Builder()
-//                .addHeader("User-Agent", "Reddit Reader")
-//                .addHeader("Authorization", "Basic " + encodedAuthString)
-//                .url(ACCESS_TOKEN_URL)
-//                .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),
-//                        "grant_type=authorization_code&code=" + code +
-//                                "&redirect_uri=" + REDIRECT_URI))
-//                .build();
-//
-//        client.newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                Log.e(TAG, "ERROR: " + e);
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                String json = response.body().string();
-//                JSONObject data = null;
-//                try {
-//                    data = new JSONObject(json);
-//                    accessToken = data.optString("access_token");
-//                    refreshToken = data.optString("refresh_token");
-//                    LOGGIN = true;
-//                    Log.d(TAG, "Access Token = " + accessToken);
-//                    Log.d(TAG, "Refresh Token = " + refreshToken);
-//                    me_detail(accessToken, refreshToken);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//    }
-
     private void getAccessToken(String code) {
         new ConnectionTask(){
             @Override
@@ -272,72 +227,6 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
                 }
             }
         }.execute(code);
-//        String authString = CLIENT_ID + ":";
-//        String encodedAuthString = Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
-//
-//        String urlParameters  = "grant_type=authorization_code&code=" + code + "&redirect_uri=" + REDIRECT_URI;
-//        byte[] postData       = new byte[0];
-//        try {
-//            postData = urlParameters.getBytes("UTF-8");
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//        int    postDataLength = postData.length;
-//        String request        = ACCESS_TOKEN_URL;
-//        URL url            = null;
-//        try {
-//            url = new URL( request );
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
-//        HttpURLConnection conn= null;
-//        try {
-//            conn = (HttpURLConnection) url.openConnection();
-//            conn.setDoOutput( true );
-//            conn.setRequestProperty ("Authorization", "Basic " + encodedAuthString);
-//            conn.setRequestProperty ("User-Agent", "Reddit Reader");
-//            conn.setInstanceFollowRedirects( false );
-//            conn.setRequestMethod( "POST" );
-//            conn.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded");
-//            conn.setRequestProperty( "charset", "utf-8");
-//            conn.setRequestProperty( "Content-Length", Integer.toString( postDataLength ));
-//            conn.setUseCaches( false );
-//            DataOutputStream wr = new DataOutputStream( conn.getOutputStream());
-//            wr.write( postData );
-//            wr.flush();
-//
-//            StringBuilder sb = new StringBuilder();
-//            int HttpResult = conn.getResponseCode();
-//            if (HttpResult == HttpURLConnection.HTTP_OK) {
-//                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
-//                String line = null;
-//                while ((line = br.readLine()) != null) {
-//                    sb.append(line + "\n");
-//                }
-//                br.close();
-//                String json = sb.toString();
-//                System.out.println("....." + json);
-//                JSONObject data = null;
-//                try {
-//                    data = new JSONObject(json);
-//                    accessToken = data.optString("access_token");
-//                    refreshToken = data.optString("refresh_token");
-//                    LOGGIN = true;
-//                    Log.d(TAG, "Access Token = " + accessToken);
-//                    Log.d(TAG, "Refresh Token = " + refreshToken);
-//                    me_detail(accessToken, refreshToken);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            } else{
-//                System.out.println(conn.getResponseMessage());
-//                //  que intente de nuevo
-//            }
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     private boolean me_detail (String token, String refreshToken){
@@ -404,11 +293,6 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
                 System.out.println("lolololololo");
                 String json = response.body().string();
                 System.out.println(response.toString());
-//                Note: Per RFC 7009, this request will return a success (204) response even if the
-//                passed in token was never valid.
-//                LOGGIN =false;
-//                invalidateOptionsMenu();
-//                finish();
             }
         });
     }
@@ -467,7 +351,7 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
                         data = new JSONObject(json);
                         accessToken = data.optString("access_token");
                         refreshToken = data.optString("refresh_token");
-                        LOGGIN = true;
+                        LOGIN = true;
                         Log.d(TAG, "Access Token = " + accessToken);
                         Log.d(TAG, "Refresh Token = " + refreshToken);
 //                        me_detail(accessToken, refreshToken);

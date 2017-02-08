@@ -95,11 +95,11 @@ public class NewsDetailActivityFragment extends Fragment {
         holder.up = (ImageButton) view.findViewById(R.id.upDetail);
         holder.down = (ImageButton) view.findViewById(R.id.downDetail);
 
-        if(NewsActivity.LOGGIN && postModel.getClickup() == 1){
+        if(NewsActivity.LOGIN && postModel.getClickup() == 1){
             holder.up.setBackgroundColor(Color.DKGRAY);
             score=postModel.getScore()-1;
         }
-        if(NewsActivity.LOGGIN && postModel.getClickdown() == 1){
+        if(NewsActivity.LOGIN && postModel.getClickdown() == 1){
             holder.down.setBackgroundColor(Color.DKGRAY);
             score=postModel.getScore()+1;
         }
@@ -110,7 +110,7 @@ public class NewsDetailActivityFragment extends Fragment {
             @Override
             public void onClick(View arg0) {
                 button.Bcontrol("1");
-                if(NewsActivity.LOGGIN) {
+                if(NewsActivity.LOGIN) {
                     mListener.onFragmentInteraction(null, postModel);
                 }
             }
@@ -120,7 +120,7 @@ public class NewsDetailActivityFragment extends Fragment {
             @Override
             public void onClick(View arg0) {
                 button.Bcontrol("-1");
-                if(NewsActivity.LOGGIN){
+                if(NewsActivity.LOGIN){
                     mListener.onFragmentInteraction(null, postModel);
                 }
             }

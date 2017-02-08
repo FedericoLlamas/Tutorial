@@ -65,7 +65,7 @@ public class NewsDetailActivity extends AppCompatActivity implements NewsDetailA
             Context context= getApplicationContext();
             Intent intent = new Intent(Intent.ACTION_VIEW, uri, context, WebViewActivity.class);
             startActivityForResult(intent, REQUEST);
-        }else if(post!=null && NewsActivity.LOGGIN){
+        }else if(post!=null && NewsActivity.LOGIN){
             Intent intent = new Intent();
             intent.putExtra("post",post);
             intent.putExtra("position", position);

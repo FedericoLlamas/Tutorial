@@ -2,7 +2,6 @@ package ar.edu.unc.famaf.redditreader.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -25,10 +24,6 @@ import ar.edu.unc.famaf.redditreader.backend.EndlessScrollListener;
 import ar.edu.unc.famaf.redditreader.backend.TopPostIterator;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
-
-/**
- * A placeholder fragment containing a simple view.
- */
 public class NewsActivityFragment extends Fragment{
     OnPostItemSelectedListener listener;
     PostAdapter adapter;
@@ -36,7 +31,6 @@ public class NewsActivityFragment extends Fragment{
     List<PostModel> list;
 
     public NewsActivityFragment () {
-        // Required empty public constructor
     }
 
     public static NewsActivityFragment newInstance() {
@@ -55,7 +49,6 @@ public class NewsActivityFragment extends Fragment{
         try {
             listener  = (OnPostItemSelectedListener) a;
         } catch (ClassCastException e) {
-            //throw new ClassCastException(context.toString()+ "must implement OnPostItemSelectedListener");
         }
     }
     @Override
@@ -92,7 +85,7 @@ public class NewsActivityFragment extends Fragment{
                     list.addAll(lst);
                     adapter.notifyDataSetChanged();
                 }else{
-                    Toast.makeText(getActivity(), "Error loading list. Try again",
+                    Toast.makeText(getActivity(), "Error",
                             Toast.LENGTH_LONG).show();
                 }
             }
@@ -158,9 +151,6 @@ public class NewsActivityFragment extends Fragment{
     @Override
     public void onPause() {
         super.onPause();
-        //guardar info
-        //Bundle args = new Bundle();
-        //setArguments(args);
     }
 
 

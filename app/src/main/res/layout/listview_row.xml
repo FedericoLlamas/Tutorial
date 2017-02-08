@@ -7,22 +7,6 @@
     android:descendantFocusability="blocksDescendants"
     android:id="@+id/listview_row">
 
-
-    <!--android:layout_alignLeft="@id/imageView"-->
-
-
-    <!--android:layout_toRightOf="@id/author" android:descendantFocusability="blocksDescendants"-->
-
-    <TextView
-        android:text="hace 4 hs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:id="@+id/created"
-        android:layout_alignTop="@+id/subreddit"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:textColor="@android:color/darker_gray" />
     <ImageView
         android:layout_width="70dp"
         app:srcCompat="@mipmap/ic_launcher"
@@ -30,20 +14,6 @@
         android:layout_below="@+id/author"
         android:layout_height="70dp"
         />
-    <!--<ImageView-->
-    <!--android:layout_width="70dp"-->
-    <!--android:layout_height="70dp"-->
-    <!--app:srcCompat="@mipmap/ic_launcher"-->
-    <!--android:id="@+id/imageView"-->
-    <!--android:layout_below="@+id/author"-->
-    <!--android:maxWidth="80dp"-->
-    <!--android:maxHeight="80dp"-->
-
-    <!--android:cropToPadding="true"-->
-
-    <!--android:layout_marginBottom="1dp"-->
-    <!--/>-->
-
 
     <TextView
         android:text="texto"
@@ -60,7 +30,8 @@
         android:layout_toLeftOf="@+id/imageView3"
         android:layout_marginRight="15dp"
         android:layout_marginLeft="80dp"
-        android:textColor="@android:color/background_dark" />
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp" />
 
 
     <ProgressBar
@@ -74,50 +45,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/imageView"
         android:layout_alignEnd="@+id/imageView" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/sym_action_chat"
-        android:id="@+id/imageView2"
-
-        android:layout_below="@+id/title"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/comment"
-        android:layout_alignBottom="@+id/comment"
-        android:layout_alignRight="@+id/imageView"
-        android:layout_alignEnd="@+id/imageView" />
-
-    <TextView
-        android:text="1212 comentarios"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/comment"
-        android:layout_below="@+id/title"
-        android:textColor="@android:color/darker_gray"
-        android:layout_toLeftOf="@+id/up"
-        android:layout_alignLeft="@+id/title"
-        android:layout_alignStart="@+id/title" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_media_play"
-        android:id="@+id/imageView3"
-        android:layout_alignBottom="@+id/title"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/subreddit" />
-
-    <TextView
-        android:text="r/today"
-        android:layout_height="wrap_content"
-        android:id="@+id/subreddit"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/created"
-        android:layout_width="150dp"
-        android:textColor="@color/colorPrimaryDark" />
 
     <TextView
         android:text="author "
@@ -135,28 +62,79 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/scoredetail"
+        android:layout_alignTop="@+id/up"
+        android:layout_toRightOf="@+id/up"
+        android:layout_toEndOf="@+id/up" />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:srcCompat="@android:drawable/arrow_down_float"
+        android:id="@+id/down"
+        android:layout_alignTop="@+id/scoredetail"
+        android:layout_toRightOf="@+id/scoredetail"
+        android:layout_toEndOf="@+id/scoredetail"
+        android:cropToPadding="false" />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:srcCompat="@android:drawable/arrow_up_float"
+        android:id="@+id/up"
+        android:layout_alignBottom="@+id/comment"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        app:srcCompat="@android:drawable/ic_media_play"
+        android:id="@+id/imageView3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_height="500dp"
+        android:layout_alignBottom="@+id/comment" />
+
+    <ImageView
+        app:srcCompat="@android:drawable/sym_action_chat"
+        android:id="@+id/imageView2"
+
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/title"
         android:layout_alignRight="@+id/title"
         android:layout_alignEnd="@+id/title" />
 
-    <ImageButton
+    <TextView
+        android:text="1212 comentarios"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/arrow_down_float"
-        android:id="@+id/down"
-        android:layout_below="@+id/title"
-        android:layout_toRightOf="@+id/scoredetail"
-        android:layout_toEndOf="@+id/scoredetail" />
+        android:id="@+id/comment"
+        android:textColor="@android:color/darker_gray"
+        android:layout_below="@+id/imageView2"
+        android:layout_alignRight="@+id/imageView2"
+        android:layout_alignEnd="@+id/imageView2" />
 
-    <ImageButton
+    <TextView
+        android:text="r/today"
+        android:layout_height="wrap_content"
+        android:id="@+id/subreddit"
+        android:layout_width="150dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/scoredetail"
+        android:layout_toEndOf="@+id/scoredetail"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp" />
+
+    <TextView
+        android:text="hace 4 hs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/arrow_up_float"
-        android:id="@+id/up"
-        android:layout_below="@+id/imageView3"
-        android:layout_toStartOf="@+id/scoredetail"
-        android:layout_toLeftOf="@+id/scoredetail"
-        android:layout_alignBottom="@+id/down" />
+        android:id="@+id/created"
+        android:textColor="@android:color/darker_gray"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/title"
+        android:layout_alignEnd="@+id/title" />
 
 
 </RelativeLayout>
