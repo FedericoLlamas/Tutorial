@@ -30,7 +30,7 @@ public class VoteAction {
         this.score = score;
     }
 
-    public PostModel ButtonBehavior(final String dir) {// "1" "-1"
+    public PostModel ButtonBehavior(final String dir) {
 
         if (NewsActivity.LOGIN) {
             if (dir.equals("1")) {
@@ -57,8 +57,6 @@ public class VoteAction {
                                 model.setClickdown(0);
                                 holder.up.setVisibility(View.VISIBLE);
                             }
-                            Toast.makeText(context, "un-voting", Toast.LENGTH_SHORT).show();
-
                         } else {
                             if (!NewsActivity.ACTIVE_USER) {
                                 Toast.makeText(context, "Unauthorized. Logout!", Toast.LENGTH_LONG).show();
@@ -91,7 +89,6 @@ public class VoteAction {
                                 model.setScore(score - 1);
                                 holder.up.setVisibility(View.INVISIBLE);
                             }
-                            Toast.makeText(context, "voting", Toast.LENGTH_SHORT).show();
                             holder.score.setText(String.valueOf(model.getScore()));
                             db.updateData(model, "SCORE");
                         } else {
