@@ -4,25 +4,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.view.View;
 import android.widget.Toast;
 
 import ar.edu.unc.famaf.redditreader.backend.DBAdapter;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
-/**
- * Created by dvr on 20/01/17.
- */
-
-public class Buttons {
-    PostModel model;
+public class VoteAction {
     PostModelHolder holder;
-    DBAdapter db;
+    PostModel model;
     int clicks;
+    DBAdapter db;
+
     private Context context;
     int score;
 
-    public Buttons(PostModel model, PostModelHolder holder, DBAdapter db, Context context, int clicks, int score) {
+    public VoteAction(PostModel model, PostModelHolder holder, DBAdapter db, Context context, int clicks, int score) {
         this.model = model;
         this.holder = holder;
         this.db = db;
@@ -31,7 +30,7 @@ public class Buttons {
         this.score = score;
     }
 
-    public PostModel Bcontrol(final String dir) {// "1" "-1"
+    public PostModel ButtonBehavior(final String dir) {// "1" "-1"
 
         if (NewsActivity.LOGIN) {
             if (dir.equals("1")) {
@@ -39,9 +38,8 @@ public class Buttons {
             } else {
                 clicks = model.getClickdown() + 1;
             }
-
             if (clicks == 2) {
-                new ButtonsTask(model.getName()) {
+                new VoteTask(model.getName()) {
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
                         super.onPostExecute(aBoolean);
@@ -50,11 +48,14 @@ public class Buttons {
                             holder.score.setText(String.valueOf(model.getScore()));
                             db.updateData(model, "SCORE");
                             if (dir.equals("1")) {
-                                holder.up.setBackgroundColor(Color.TRANSPARENT);
+                                holder.up.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
                                 model.setClickup(0);
+                                holder.down.setVisibility(View.VISIBLE);
+
                             } else {
-                                holder.down.setBackgroundColor(Color.TRANSPARENT);
+                                holder.down.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
                                 model.setClickdown(0);
+                                holder.up.setVisibility(View.VISIBLE);
                             }
                             Toast.makeText(context, "un-voting", Toast.LENGTH_SHORT).show();
 
@@ -69,7 +70,7 @@ public class Buttons {
 
 
             } else {
-                new ButtonsTask(model.getName()) {
+                new VoteTask(model.getName()) {
                     @Override
                     protected void onPostExecute(Boolean aBoolean) {
                         super.onPostExecute(aBoolean);
@@ -78,15 +79,17 @@ public class Buttons {
                             if (dir.equals("1")) {
                                 model.setClickdown(0);
                                 model.setClickup(1);
-                                holder.down.setBackgroundColor(Color.TRANSPARENT);
-                                holder.up.setBackgroundColor(Color.DKGRAY);
+                                holder.up.setColorFilter(Color.parseColor("#ff8b60"), PorterDuff.Mode.SRC_ATOP);
+                                holder.down.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
                                 model.setScore(score + 1);
+                                holder.down.setVisibility(View.INVISIBLE);
                             } else {
                                 model.setClickup(0);
                                 model.setClickdown(1);
-                                holder.up.setBackgroundColor(Color.TRANSPARENT);
-                                holder.down.setBackgroundColor(Color.DKGRAY);
+                                holder.down.setColorFilter(Color.parseColor("#ff8b60"), PorterDuff.Mode.SRC_ATOP);
+                                holder.up.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
                                 model.setScore(score - 1);
+                                holder.up.setVisibility(View.INVISIBLE);
                             }
                             Toast.makeText(context, "voting", Toast.LENGTH_SHORT).show();
                             holder.score.setText(String.valueOf(model.getScore()));

@@ -17,21 +17,12 @@ import android.widget.TextView;
 import ar.edu.unc.famaf.redditreader.R;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NewsDetailActivityFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NewsDetailActivityFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class NewsDetailActivityFragment extends Fragment {
     private PostModel postModel;
-    private int clicks=0;
+    private int clicks = 0;
     private OnFragmentInteractionListener mListener;
 
     public NewsDetailActivityFragment() {
-        // Required empty public constructor
     }
 
 
@@ -52,30 +43,27 @@ public class NewsDetailActivityFragment extends Fragment {
         }
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int score= postModel.getScore();
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_news_detail_activity, container, false);
 
-        TextView text1 = (TextView) view.findViewById(R.id.textView5 );
-        text1.setText(String.valueOf(postModel.getCreated()));
+        TextView date = (TextView) view.findViewById(R.id.detail_date_id);
+        date.setText(String.valueOf(postModel.getCreated()));
 
-        TextView text2 = (TextView) view.findViewById(R.id.textView6);
-        text2.setText(postModel.getAuthor());
+        TextView author = (TextView) view.findViewById(R.id.detail_author_id);
+        author.setText(postModel.getAuthor());
 
-        TextView text3 = (TextView) view.findViewById(R.id.textView7);
-        text3.setText(postModel.getSubreddit());
+        TextView subreddit = (TextView) view.findViewById(R.id.detail_subreddit_id);
+        subreddit.setText(postModel.getSubreddit());
 
-        TextView text4 = (TextView) view.findViewById(R.id.textView);
-        text4.setText(postModel.getTitle());
+        TextView description = (TextView) view.findViewById(R.id.detail_description_id);
+        description.setText(postModel.getTitle());
 
-        TextView text5 = (TextView) view.findViewById(R.id.textView3);
-        text5.setText(postModel.getUrl());
-        text5.setOnClickListener(new View.OnClickListener() {
+        TextView url = (TextView) view.findViewById(R.id.detail_url_id);
+        url.setText(postModel.getUrl());
+        url.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -84,32 +72,29 @@ public class NewsDetailActivityFragment extends Fragment {
             }
         });
 
-        ImageView image = (ImageView) view.findViewById(R.id.imageView4);
+        ImageView image = (ImageView) view.findViewById(R.id.detail_img_id);
         image.setImageBitmap(getImage(postModel.getIcon()));
 
-        //Parte nueva
         PostModelHolder holder = new PostModelHolder();
-        holder.score=(TextView) view.findViewById(R.id.scoredetail);
+        holder.score = (TextView) view.findViewById(R.id.score_id);
         holder.score.setText(String.valueOf(postModel.getScore()));
 
-        holder.up = (ImageButton) view.findViewById(R.id.upDetail);
-        holder.down = (ImageButton) view.findViewById(R.id.downDetail);
+        holder.up = (ImageButton) view.findViewById(R.id.detail_up_id);
+        holder.down = (ImageButton) view.findViewById(R.id.detail_down_id);
 
         if(NewsActivity.LOGIN && postModel.getClickup() == 1){
-            holder.up.setBackgroundColor(Color.DKGRAY);
-            score=postModel.getScore()-1;
+            score = postModel.getScore() + 1;
         }
         if(NewsActivity.LOGIN && postModel.getClickdown() == 1){
-            holder.down.setBackgroundColor(Color.DKGRAY);
-            score=postModel.getScore()+1;
+            score = postModel.getScore() - 1;
         }
 
-        final Buttons button = new Buttons(postModel,holder, NewsActivityFragment.db   , view.getContext(), clicks, score);
+        final VoteAction button = new VoteAction(postModel, holder, NewsActivityFragment.db , view.getContext(), clicks, score);
 
         holder.up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                button.Bcontrol("1");
+                button.ButtonBehavior("1");
                 if(NewsActivity.LOGIN) {
                     mListener.onFragmentInteraction(null, postModel);
                 }
@@ -119,7 +104,7 @@ public class NewsDetailActivityFragment extends Fragment {
         holder.down.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                button.Bcontrol("-1");
+                button.ButtonBehavior("-1");
                 if(NewsActivity.LOGIN){
                     mListener.onFragmentInteraction(null, postModel);
                 }
@@ -163,16 +148,6 @@ public class NewsDetailActivityFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri, PostModel post);

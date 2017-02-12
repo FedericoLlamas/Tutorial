@@ -58,11 +58,10 @@ public class Backend {
         private String before;
 
         public void init_process(final TopPostIterator iterator, final DBAdapter db){
-            //db.upgrade();
             new GetTopPostsTask(null,0) {
                 @Override
                 protected void onPostExecute(Listing input) {
-                    list= input.getPostModelList();// java.lang.NullPointerException:
+                    list= input.getPostModelList();
                     after=input.getAfter();
                     before=input.getBefore();
 
@@ -73,7 +72,6 @@ public class Backend {
                             protected void onPostExecute(Void aVoid) {
                                 super.onPostExecute(aVoid);
                                 loadingDB = true;
-                                //Cargo desde la base de datos la lista
                                 new DbLoadTask() {
                                     @Override
                                     protected void onPostExecute(List<PostModel> l) {
@@ -92,7 +90,7 @@ public class Backend {
         public void control(final TopPostIterator iterator, int offset, final DBAdapter db){
             waiting=true;
             if(after!=null){
-                new GetTopPostsTask(after,offset) {//pasarle after para conectarse
+                new GetTopPostsTask(after,offset) {
                     @Override
                     protected void onPostExecute(Listing input) {
                         list=input.getPostModelList();
@@ -131,7 +129,6 @@ public class Backend {
                     .setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            //do things
                         }
                     });
             AlertDialog alert = builder.create();

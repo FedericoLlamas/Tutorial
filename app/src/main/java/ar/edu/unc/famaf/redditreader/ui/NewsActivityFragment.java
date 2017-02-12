@@ -142,7 +142,6 @@ public class NewsActivityFragment extends Fragment{
         adapter.notifyDataSetChanged();
     }
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -152,7 +151,6 @@ public class NewsActivityFragment extends Fragment{
     public void onPause() {
         super.onPause();
     }
-
 
     @Override
     public void onDetach() {

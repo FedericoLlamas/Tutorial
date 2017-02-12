@@ -123,7 +123,7 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
                 String state = uri.getQueryParameter("state");
                 if(state.equals(STATE)) {
                     code = uri.getQueryParameter("code");
-                    getAccessToken(code);//obteniendo token
+                    getAccessToken(code);
                 }
             }
         }
@@ -158,11 +158,11 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_sign_in && !LOGIN) { // llamada a loggin de reddit OAuth2
+        if (id == R.id.action_sign_in && !LOGIN) {
             String url = String.format(AUTH_URL, CLIENT_ID, STATE, REDIRECT_URI);
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
-        }else if (id == R.id.action_out){ // llamada para revoca token en logout
+        }else if (id == R.id.action_out){
             logout();
             LOGIN =false;
             ACTIVE_USER =false;
@@ -174,7 +174,7 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) { // se llama luego de invalidateOptionsMenu();
+    public boolean onPrepareOptionsMenu(Menu menu) {
         if (LOGIN){
             menu.findItem(R.id.action_sign_in).setVisible(false);
             menu.findItem(R.id.action_out).setVisible(true);
@@ -186,7 +186,6 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
         return super.onPrepareOptionsMenu(menu);
     }
 
-    // se llama cuando se pide detalle de un post
     @Override
     public void onPostItemPicked(PostModel post, int position) {
         Context context= getApplicationContext();
@@ -203,7 +202,6 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
         super.onActivityResult(requestCode, resultCode, data);
         int position=0;
         if(resultCode == RESULT_OK){
-            //viene post model modificado
             if(LOGIN && data!=null) {
                 PostModel post = (PostModel) data.getSerializableExtra("post");
                 position = data.getIntExtra("position", position);
@@ -279,9 +277,6 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
                         "token="+accessToken+"&token_type_hint=access_token"))
                 .build();
 
-//        .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),
-//                "grant_type=authorization_code&code=" + code +
-//                        "&redirect_uri=" + REDIRECT_URI+"&token="+accessToken+"&token_type_hint=access_token"))
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -354,7 +349,6 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
                         LOGIN = true;
                         Log.d(TAG, "Access Token = " + accessToken);
                         Log.d(TAG, "Refresh Token = " + refreshToken);
-//                        me_detail(accessToken, refreshToken);
                         return true;
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -362,7 +356,6 @@ public class NewsActivity extends AppCompatActivity implements OnPostItemSelecte
 
                 } else{
                     System.out.println(conn.getResponseMessage());
-                    //  que intente de nuevo
                 }
 
             } catch (IOException e) {

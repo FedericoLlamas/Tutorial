@@ -19,7 +19,6 @@ public class Parser {
         // Nueva instancia JsonReader
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
         try {
-            // Leer Array
             return ArrayData(reader);
         } finally {
             reader.close();
@@ -39,7 +38,6 @@ public class Parser {
                 reader.skipValue();
             }
         }
-        //reader.endObject();
         return list;
 
     }
@@ -53,7 +51,6 @@ public class Parser {
             String name = reader.nextName();
             if (name.equals("children")) {
                 list = readChildren(reader);
-                //break;
             }else if (name.equals("after")){
                 after=reader.nextString();
             }else if(name.equals("before") && reader.peek()!= JsonToken.NULL){
@@ -64,7 +61,6 @@ public class Parser {
         }
         list.setBefore(before);
         list.setAfter(after);
-        //reader.endObject();
         return list;
     }
 

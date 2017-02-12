@@ -10,24 +10,24 @@
     <ImageView
         android:layout_width="70dp"
         app:srcCompat="@mipmap/ic_launcher"
-        android:id="@+id/imageView"
-        android:layout_below="@+id/author"
+        android:id="@+id/image_id"
+        android:layout_below="@+id/author_id"
         android:layout_height="70dp"
         />
 
     <TextView
-        android:text="texto"
+        android:text="description"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:id="@+id/title"
-        android:layout_below="@+id/subreddit"
+        android:id="@+id/detail_description_id"
+        android:layout_below="@+id/subreddit_id"
         android:ellipsize="end"
-        android:layout_alignBottom="@id/imageView"
-        android:layout_alignTop="@id/imageView"
+        android:layout_alignBottom="@id/image_id"
+        android:layout_alignTop="@id/image_id"
         android:layout_marginBottom="1dp"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_toStartOf="@+id/imageView3"
-        android:layout_toLeftOf="@+id/imageView3"
+        android:layout_toRightOf="@+id/image_id"
+        android:layout_toStartOf="@+id/row_id"
+        android:layout_toLeftOf="@+id/row_id"
         android:layout_marginRight="15dp"
         android:layout_marginLeft="80dp"
         android:textColor="@android:color/background_dark"
@@ -38,18 +38,18 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_alignTop="@+id/imageView"
-        android:layout_alignBottom="@+id/imageView"
+        android:id="@+id/progress_id"
+        android:layout_alignTop="@+id/image_id"
+        android:layout_alignBottom="@+id/image_id"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/imageView"
-        android:layout_alignEnd="@+id/imageView" />
+        android:layout_alignRight="@+id/image_id"
+        android:layout_alignEnd="@+id/image_id" />
 
     <TextView
         android:text="author "
         android:layout_height="wrap_content"
-        android:id="@+id/author"
+        android:id="@+id/author_id"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -61,7 +61,7 @@
         android:text="score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scoredetail"
+        android:id="@+id/score_id"
         android:layout_alignTop="@+id/up"
         android:layout_toRightOf="@+id/up"
         android:layout_toEndOf="@+id/up" />
@@ -71,9 +71,9 @@
         android:layout_height="50dp"
         app:srcCompat="@android:drawable/arrow_down_float"
         android:id="@+id/down"
-        android:layout_alignTop="@+id/scoredetail"
-        android:layout_toRightOf="@+id/scoredetail"
-        android:layout_toEndOf="@+id/scoredetail"
+        android:layout_alignTop="@+id/score_id"
+        android:layout_toRightOf="@+id/score_id"
+        android:layout_toEndOf="@+id/score_id"
         android:cropToPadding="false" />
 
     <ImageButton
@@ -81,60 +81,60 @@
         android:layout_height="50dp"
         app:srcCompat="@android:drawable/arrow_up_float"
         android:id="@+id/up"
-        android:layout_alignBottom="@+id/comment"
+        android:layout_alignBottom="@+id/comment_id"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <ImageView
         android:layout_width="wrap_content"
         app:srcCompat="@android:drawable/ic_media_play"
-        android:id="@+id/imageView3"
+        android:id="@+id/row_id"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_height="500dp"
-        android:layout_alignBottom="@+id/comment" />
+        android:layout_alignBottom="@+id/comment_id" />
 
     <ImageView
         app:srcCompat="@android:drawable/sym_action_chat"
-        android:id="@+id/imageView2"
+        android:id="@+id/img_comment_id"
 
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_below="@+id/title"
-        android:layout_alignRight="@+id/title"
-        android:layout_alignEnd="@+id/title" />
+        android:layout_below="@+id/detail_description_id"
+        android:layout_alignRight="@+id/detail_description_id"
+        android:layout_alignEnd="@+id/detail_description_id" />
 
     <TextView
-        android:text="1212 comentarios"
+        android:text="comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/comment"
+        android:id="@+id/comment_id"
         android:textColor="@android:color/darker_gray"
-        android:layout_below="@+id/imageView2"
-        android:layout_alignRight="@+id/imageView2"
-        android:layout_alignEnd="@+id/imageView2" />
+        android:layout_below="@+id/img_comment_id"
+        android:layout_alignRight="@+id/img_comment_id"
+        android:layout_alignEnd="@+id/img_comment_id" />
 
     <TextView
-        android:text="r/today"
+        android:text="@string/subreddit"
         android:layout_height="wrap_content"
-        android:id="@+id/subreddit"
+        android:id="@+id/subreddit_id"
         android:layout_width="150dp"
         android:textColor="@color/colorPrimaryDark"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/scoredetail"
-        android:layout_toEndOf="@+id/scoredetail"
+        android:layout_toRightOf="@+id/score_id"
+        android:layout_toEndOf="@+id/score_id"
         android:layout_marginLeft="14dp"
         android:layout_marginStart="14dp" />
 
     <TextView
-        android:text="hace 4 hs"
+        android:text="date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/created"
+        android:id="@+id/date_id"
         android:textColor="@android:color/darker_gray"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/title"
-        android:layout_alignEnd="@+id/title" />
+        android:layout_alignRight="@+id/detail_description_id"
+        android:layout_alignEnd="@+id/detail_description_id" />
 
 
 </RelativeLayout>

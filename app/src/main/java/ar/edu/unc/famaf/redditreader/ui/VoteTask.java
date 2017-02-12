@@ -14,11 +14,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
-public class ButtonsTask extends AsyncTask<String, Integer,Boolean> {
+public class VoteTask extends AsyncTask<String, Integer,Boolean> {
 
     String name;
 
-    public ButtonsTask(String name){
+    public VoteTask(String name){
         this.name = name;
 
     }
@@ -81,7 +81,6 @@ public class ButtonsTask extends AsyncTask<String, Integer,Boolean> {
                 System.out.println(conn.getResponseMessage());
                 NewsActivity.ACTIVE_USER = false;
             }else{
-                //ver otros errores
                 NewsActivity.ACTIVE_USER = false;
                 System.out.println(conn.getResponseMessage());
             }
