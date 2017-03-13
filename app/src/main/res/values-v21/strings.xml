@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="subreddit">subreddit</string>
+    <string name="time">fecha</string>
+    <string name="lorem_ipsum">lorem</string>
+    <string name="comments">comments </string>
+    <string name="titlePost">titlePost</string>
+    <string name="date">date</string>
+</resources>

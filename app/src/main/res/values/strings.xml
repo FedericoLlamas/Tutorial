@@ -1,5 +1,9 @@
 <resources>
+<<<<<<< HEAD
     <string name="app_name">ActivitiesAssignment</string>
+=======
+    <string name="app_name">Reddit Reader</string>
+>>>>>>> final
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -17,6 +21,19 @@
 
     <string name="title_activity_news">"Activity News"
     </string>
+<<<<<<< HEAD
+=======
+    <string name="subreddit">subreddit</string>
+    <string name="time">fecha</string>
+    <string name="lorem_ipsum">lorem</string>
+    <string name="comments">comments </string>
+    <string name="titlePost">titlePost</string>
+    <string name="date">date</string>
+    <string name="no_user_logged_yet">No user logged yet</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+>>>>>>> final
 
 
 </resources>
