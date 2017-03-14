@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -45,6 +46,7 @@ public class PostAdapter extends ArrayAdapter {
     private DBAdapter db;
     private boolean mbusy;
 
+
     public PostAdapter(Context context, int resource, List<PostModel> list, DBAdapter db, boolean mBusy) {
         super(context, resource, list);
         listPostModel = list;
@@ -75,15 +77,15 @@ public class PostAdapter extends ArrayAdapter {
 
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new PostModelHolder();
-            holder.author = (TextView) row.findViewById(R.id.author_id);
             holder.created = (TextView) row.findViewById(R.id.date_id);
+            holder.author = (TextView) row.findViewById(R.id.author_id);
             holder.subreddit = (TextView) row.findViewById(R.id.subreddit_id);
-            holder.title = (TextView) row.findViewById(R.id.detail_description_id);
             holder.icon = (ImageView) row.findViewById(R.id.image_id);
             holder.comments = (TextView) row.findViewById(R.id.comment_id);
+            holder.title = (TextView) row.findViewById(R.id.detail_description_id);
             holder.progressBar = (ProgressBar) row.findViewById(R.id.progress_id);
-            holder.score = (TextView) row.findViewById(R.id.score_id);
             holder.up = (ImageButton) row.findViewById(R.id.up);
+            holder.score = (TextView) row.findViewById(R.id.score_id);
             holder.down = (ImageButton) row.findViewById(R.id.down);
             row.setTag(holder);
         }else{
@@ -103,19 +105,18 @@ public class PostAdapter extends ArrayAdapter {
         holder.position= position;
 
         if(NewsActivity.LOGIN && model.getClickup() == 1){
-            score = model.getScore() + 1;
+            holder.up.setBackgroundColor(Color.DKGRAY);
+            score=model.getScore()-1;
         }
         if(NewsActivity.LOGIN && model.getClickdown() == 1){
-            score = model.getScore() - 1;
+            holder.down.setBackgroundColor(Color.DKGRAY);
+            score=model.getScore()+1;
         }
         final VoteAction button = new VoteAction(model,holder, db, context, clicks, score);
-
         holder.up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 if(NewsActivity.LOGIN && !NewsActivity.ACTIVE_USER){
-                    Toast.makeText(context, "Unauthorized", Toast.LENGTH_SHORT).show();
-                    System.out.println("SIN AUTORIZACION");
                     ((Activity) context).finish();
                 }else{
                     button.ButtonBehavior("1");
@@ -127,8 +128,6 @@ public class PostAdapter extends ArrayAdapter {
             @Override
             public void onClick(View arg0) {
                 if(NewsActivity.LOGIN && !NewsActivity.ACTIVE_USER){
-                    Toast.makeText(context, "Unauthorized", Toast.LENGTH_SHORT).show();
-                    System.out.println("SIN AUTORIZACION");
                     ((Activity) context).finish();
                 }else{
                     button.ButtonBehavior("-1");
@@ -196,7 +195,7 @@ public class PostAdapter extends ArrayAdapter {
             }
             if(bitmap!=null){
                 model.setIcon(getBytes(bitmap));
-                db.updateData(model, "IMAGE");
+                db.updateImage(model);
             }
             return bitmap;
         }

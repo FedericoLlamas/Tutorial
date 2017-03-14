@@ -4,20 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.net.Uri;
-import android.view.View;
 import android.widget.Toast;
 
 import ar.edu.unc.famaf.redditreader.backend.DBAdapter;
 import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 public class VoteAction {
-    PostModelHolder holder;
     PostModel model;
-    int clicks;
+    PostModelHolder holder;
     DBAdapter db;
-
+    int clicks;
     private Context context;
     int score;
 
@@ -30,7 +27,8 @@ public class VoteAction {
         this.score = score;
     }
 
-    public PostModel ButtonBehavior(final String dir) {
+
+    public PostModel ButtonBehavior(final String dir) {// "1" "-1"
 
         if (NewsActivity.LOGIN) {
             if (dir.equals("1")) {
@@ -38,6 +36,7 @@ public class VoteAction {
             } else {
                 clicks = model.getClickdown() + 1;
             }
+
             if (clicks == 2) {
                 new VoteTask(model.getName()) {
                     @Override
@@ -46,17 +45,16 @@ public class VoteAction {
                         if (aBoolean) {
                             model.setScore(score);
                             holder.score.setText(String.valueOf(model.getScore()));
-                            db.updateData(model, "SCORE");
+                            db.updateScore(model);
                             if (dir.equals("1")) {
-                                holder.up.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+                                holder.up.setBackgroundColor(Color.TRANSPARENT);
                                 model.setClickup(0);
-                                holder.down.setVisibility(View.VISIBLE);
-
                             } else {
-                                holder.down.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+                                holder.down.setBackgroundColor(Color.TRANSPARENT);
                                 model.setClickdown(0);
-                                holder.up.setVisibility(View.VISIBLE);
                             }
+                            Toast.makeText(context, "un-voting", Toast.LENGTH_SHORT).show();
+
                         } else {
                             if (!NewsActivity.ACTIVE_USER) {
                                 Toast.makeText(context, "Unauthorized. Logout!", Toast.LENGTH_LONG).show();
@@ -77,20 +75,19 @@ public class VoteAction {
                             if (dir.equals("1")) {
                                 model.setClickdown(0);
                                 model.setClickup(1);
-                                holder.up.setColorFilter(Color.parseColor("#ff8b60"), PorterDuff.Mode.SRC_ATOP);
-                                holder.down.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+                                holder.down.setBackgroundColor(Color.TRANSPARENT);
+                                holder.up.setBackgroundColor(Color.DKGRAY);
                                 model.setScore(score + 1);
-                                holder.down.setVisibility(View.INVISIBLE);
                             } else {
                                 model.setClickup(0);
                                 model.setClickdown(1);
-                                holder.down.setColorFilter(Color.parseColor("#ff8b60"), PorterDuff.Mode.SRC_ATOP);
-                                holder.up.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+                                holder.up.setBackgroundColor(Color.TRANSPARENT);
+                                holder.down.setBackgroundColor(Color.DKGRAY);
                                 model.setScore(score - 1);
-                                holder.up.setVisibility(View.INVISIBLE);
                             }
+                            Toast.makeText(context, "voting", Toast.LENGTH_SHORT).show();
                             holder.score.setText(String.valueOf(model.getScore()));
-                            db.updateData(model, "SCORE");
+                            db.updateScore(model);
                         } else {
                             if (!NewsActivity.ACTIVE_USER) {
                                 Toast.makeText(context, "Unauthorized. Logout!", Toast.LENGTH_LONG).show();
@@ -109,4 +106,3 @@ public class VoteAction {
         return model;
     }
 }
-

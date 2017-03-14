@@ -1,9 +1,6 @@
 package ar.edu.unc.famaf.redditreader.ui;
 
 import android.os.AsyncTask;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -21,11 +18,6 @@ public class VoteTask extends AsyncTask<String, Integer,Boolean> {
     public VoteTask(String name){
         this.name = name;
 
-    }
-
-    @Override
-    protected void onPreExecute() { //REcibe dir
-        super.onPreExecute();
     }
 
     @Override
@@ -81,6 +73,7 @@ public class VoteTask extends AsyncTask<String, Integer,Boolean> {
                 System.out.println(conn.getResponseMessage());
                 NewsActivity.ACTIVE_USER = false;
             }else{
+                //ver otros errores
                 NewsActivity.ACTIVE_USER = false;
                 System.out.println(conn.getResponseMessage());
             }
@@ -89,11 +82,5 @@ public class VoteTask extends AsyncTask<String, Integer,Boolean> {
             e.printStackTrace();
         }
         return false;
-
-    }
-
-    @Override
-    protected void onPostExecute(Boolean aBoolean) {
-        super.onPostExecute(aBoolean);
     }
 }

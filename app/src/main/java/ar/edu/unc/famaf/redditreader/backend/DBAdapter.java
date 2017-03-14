@@ -88,21 +88,23 @@ public class DBAdapter {
         return this;
     }
 
-    public void updateData(PostModel postModel, String elem){
+    public  void updateScore(PostModel postModel){
         if(!database.isOpen()){
             Writable();
         }
-        ContentValues val = new ContentValues();
-        if (elem == "SCORE"){
-            val.put(SCORE, postModel.getScore());
+        ContentValues values = new ContentValues();
+        values.put(SCORE, postModel.getScore());
+        database.update(TABLE_NAME, values, ID + "=" + postModel.getId(),null);
+        close();
+    }
+
+    public  void updateImage(PostModel postModel) {
+        if(!database.isOpen()){
+            Writable();
         }
-        else if(elem == "IMAGE"){
-            val.put(ICON, postModel.getIcon());
-        }
-        else{
-            close();
-        }
-        database.update(TABLE_NAME, val, ID + "=" + postModel.getId(),null);
+        ContentValues values = new ContentValues();
+        values.put(ICON, postModel.getIcon());
+        database.update(TABLE_NAME, values, ID + "=" + postModel.getId(),null);
         close();
     }
 

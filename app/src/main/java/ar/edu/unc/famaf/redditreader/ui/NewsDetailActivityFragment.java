@@ -19,7 +19,7 @@ import ar.edu.unc.famaf.redditreader.model.PostModel;
 
 public class NewsDetailActivityFragment extends Fragment {
     private PostModel postModel;
-    private int clicks = 0;
+    private int clicks=0;
     private OnFragmentInteractionListener mListener;
 
     public NewsDetailActivityFragment() {
@@ -43,27 +43,29 @@ public class NewsDetailActivityFragment extends Fragment {
         }
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int score= postModel.getScore();
         View view = inflater.inflate(R.layout.fragment_news_detail_activity, container, false);
 
-        TextView date = (TextView) view.findViewById(R.id.detail_date_id);
-        date.setText(String.valueOf(postModel.getCreated()));
+        TextView text1 = (TextView) view.findViewById(R.id.detail_date_id);
+        text1.setText(String.valueOf(postModel.getCreated()));
 
-        TextView author = (TextView) view.findViewById(R.id.detail_author_id);
-        author.setText(postModel.getAuthor());
+        TextView text2 = (TextView) view.findViewById(R.id.detail_author_id);
+        text2.setText(postModel.getAuthor());
 
-        TextView subreddit = (TextView) view.findViewById(R.id.detail_subreddit_id);
-        subreddit.setText(postModel.getSubreddit());
+        TextView text3 = (TextView) view.findViewById(R.id.detail_author_id);
+        text3.setText(postModel.getSubreddit());
 
-        TextView description = (TextView) view.findViewById(R.id.detail_description_id);
-        description.setText(postModel.getTitle());
+        TextView text4 = (TextView) view.findViewById(R.id.detail_title_id);
+        text4.setText(postModel.getTitle());
 
-        TextView url = (TextView) view.findViewById(R.id.detail_url_id);
-        url.setText(postModel.getUrl());
-        url.setOnClickListener(new View.OnClickListener() {
+        TextView text5 = (TextView) view.findViewById(R.id.detail_url_id);
+        text5.setText(postModel.getUrl());
+        text5.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -76,20 +78,22 @@ public class NewsDetailActivityFragment extends Fragment {
         image.setImageBitmap(getImage(postModel.getIcon()));
 
         PostModelHolder holder = new PostModelHolder();
-        holder.score = (TextView) view.findViewById(R.id.score_id);
+        holder.score=(TextView) view.findViewById(R.id.score_id);
         holder.score.setText(String.valueOf(postModel.getScore()));
 
         holder.up = (ImageButton) view.findViewById(R.id.detail_up_id);
         holder.down = (ImageButton) view.findViewById(R.id.detail_down_id);
 
         if(NewsActivity.LOGIN && postModel.getClickup() == 1){
-            score = postModel.getScore() + 1;
+            holder.up.setBackgroundColor(Color.DKGRAY);
+            score=postModel.getScore()-1;
         }
         if(NewsActivity.LOGIN && postModel.getClickdown() == 1){
-            score = postModel.getScore() - 1;
+            holder.down.setBackgroundColor(Color.DKGRAY);
+            score=postModel.getScore()+1;
         }
 
-        final VoteAction button = new VoteAction(postModel, holder, NewsActivityFragment.db , view.getContext(), clicks, score);
+        final VoteAction button = new VoteAction(postModel,holder, NewsActivityFragment.db   , view.getContext(), clicks, score);
 
         holder.up.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +130,7 @@ public class NewsDetailActivityFragment extends Fragment {
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri, null); ///agrgar model
+            mListener.onFragmentInteraction(uri, null);
         }
     }
 
